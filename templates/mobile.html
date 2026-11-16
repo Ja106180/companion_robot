@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>全息伴生舱 · 掌上无线遥控终端</title>
+<style>
+  :root {
+    --bg-deep: #060913;
+    --card-bg: rgba(14, 21, 38, 0.88);
+    --card-border: rgba(255, 255, 255, 0.09);
+    --text-main: #f1f5f9;
+    --text-muted: #64748b;
+    --cyan: #00f0ff;
+    --emerald: #10b981;
+    --rose: #f43f5e;
+    --violet: #8b5cf6;
+    --amber: #f59e0b;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 0%, #0f1b33 0%, var(--bg-deep) 70%);
+    color: var(--text-main);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 顶部状态栏 */
+  .m-header {
+    padding: 12px 16px;
+    background: rgba(8, 13, 25, 0.92);
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    backdrop-filter: blur(16px);
+    z-index: 20;
+  }
+  .m-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .m-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan);
+  }
+  .m-status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: var(--emerald);
+    transition: all 0.25s ease;
+  }
+  .m-status-pill.warn {
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.35);
+    color: var(--amber);
+  }
+  .m-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 6px currentColor;
+  }
+
+  /* 顶部控制面板：4只灵宠切换 + 动作遥控 */
+  .m-control-panel {
+    padding: 10px 14px;
+    background: rgba(10, 16, 30, 0.78);
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .m-section-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .m-pet-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+  .m-pet-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 10px;
+    padding: 6px 4px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .m-pet-btn .p-thumb {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    margin-bottom: 1px;
+  }
+  .m-pet-btn .p-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    display: block;
+  }
+  .m-pet-btn .p-sub {
+    font-size: 10px;
+    color: var(--text-muted);
+    display: block;
+    margin-top: 1px;
+  }
+  .m-pet-btn.active.luma {
+    background: rgba(0, 240, 255, 0.14);
+    border-color: var(--cyan);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.2);
+  }
+  .m-pet-btn.active.luma .p-name { color: var(--cyan); }
+
+  .m-pet-btn.active.pipi {
+    background: rgba(244, 63, 94, 0.14);
+    border-color: var(--rose);
+    box-shadow: 0 0 12px rgba(244, 63, 94, 0.2);
+  }
+  .m-pet-btn.active.pipi .p-name { color: var(--rose); }
+
+  .m-pet-btn.active.taigo {
+    background: rgba(139, 92, 246, 0.14);
+    border-color: var(--violet);
+    box-shadow: 0 0 12px rgba(139, 92, 246, 0.2);
+  }
+  .m-pet-btn.active.taigo .p-name { color: var(--violet); }
+
+  .m-pet-btn.active.auri {
+    background: rgba(16, 185, 129, 0.14);
+    border-color: var(--emerald);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.2);
+  }
+  .m-pet-btn.active.auri .p-name { color: var(--emerald); }
+
+  .m-pet-btn.active.nuannuan {
+    background: rgba(245, 158, 11, 0.16);
+    border-color: #fbbf24;
+    box-shadow: 0 0 12px rgba(245, 158, 11, 0.24);
+  }
+  .m-pet-btn.active.nuannuan .p-name { color: #fbbf24; }
+
+  .m-pet-btn.active.duoduo {
+    background: rgba(56, 189, 248, 0.16);
+    border-color: #7dd3fc;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.24);
+  }
+  .m-pet-btn.active.duoduo .p-name { color: #7dd3fc; }
+
+  /* 舞台远程控制条 */
+  .m-stage-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+  .m-action-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-main);
+    font-size: 11.5px;
+    padding: 6px 4px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.18s ease;
+  }
+  .m-action-btn:active {
+    transform: scale(0.96);
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+  .m-action-btn.stop {
+    color: var(--rose);
+    border-color: rgba(244, 63, 94, 0.28);
+  }
+
+  /* 实时同步消息流 */
+  .m-chat-box {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+  }
+  .m-row {
+    display: flex;
+    width: 100%;
+  }
+  .m-row.user {
+    justify-content: flex-end;
+  }
+  .m-row.assistant {
+    justify-content: flex-start;
+  }
+  .m-bubble {
+    max-width: 86%;
+    padding: 11px 14px;
+    border-radius: 14px;
+    font-size: 14px;
+    line-height: 1.55;
+    word-break: break-word;
+  }
+  .m-row.user .m-bubble {
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+  }
+  .m-row.assistant .m-bubble {
+    background: rgba(16, 26, 46, 0.92);
+    border: 1px solid rgba(0, 240, 255, 0.2);
+    color: var(--text-main);
+    border-bottom-left-radius: 4px;
+  }
+  .m-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10.5px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-bottom: 6px;
+    margin-right: 4px;
+  }
+  .m-chip.web {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    color: var(--emerald);
+  }
+  .m-chip.mem {
+    background: rgba(0, 240, 255, 0.1);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    color: var(--cyan);
+  }
+  .m-chip.vision {
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.42);
+    color: #c4b5fd;
+  }
+  .m-vision-card {
+    margin: 6px 0 8px 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    background: rgba(5, 10, 20, 0.85);
+  }
+  .m-vision-card img {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+  }
+  .m-vision-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 10px;
+    font-size: 10.5px;
+    color: var(--text-muted);
+    background: rgba(10, 16, 30, 0.95);
+  }
+  .m-vision-bar a {
+    color: var(--cyan);
+    text-decoration: none;
+  }
+  .m-source-tag {
+    font-size: 10px;
+    opacity: 0.75;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  /* 底部输入与快捷指令区 */
+  .m-dock {
+    padding: 10px 12px calc(12px + env(safe-area-inset-bottom));
+    background: rgba(8, 13, 25, 0.95);
+    border-top: 1px solid var(--card-border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .m-quick-scroll {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  .m-quick-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .m-quick-chip {
+    flex-shrink: 0;
+    font-size: 11.5px;
+    padding: 5px 11px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: #cbd5e1;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .m-quick-chip:active {
+    background: rgba(0, 240, 255, 0.15);
+    border-color: var(--cyan);
+    color: var(--cyan);
+  }
+
+  .m-asr-bar {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    background: rgba(15, 23, 42, 0.92);
+    border: 1px solid rgba(16, 185, 129, 0.45);
+    font-size: 12px;
+    color: var(--emerald);
+  }
+  .m-asr-bar.active {
+    display: flex;
+  }
+  .m-asr-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--emerald);
+    box-shadow: 0 0 8px var(--emerald);
+    animation: mPulse 1s infinite alternate;
+    flex-shrink: 0;
+  }
+  @keyframes mPulse {
+    0% { transform: scale(0.85); opacity: 0.6; }
+    100% { transform: scale(1.25); opacity: 1; }
+  }
+  .m-input-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .m-mic-btn {
+    background: rgba(16, 185, 129, 0.16);
+    border: 1px solid rgba(16, 185, 129, 0.45);
+    color: #34d399;
+    font-weight: 600;
+    font-size: 13px;
+    border-radius: 12px;
+    padding: 11px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .m-mic-btn.recording {
+    background: linear-gradient(135deg, rgba(244, 63, 94, 0.9), rgba(225, 29, 72, 0.9));
+    border-color: #fb7185;
+    color: #fff;
+    box-shadow: 0 0 14px rgba(244, 63, 94, 0.5);
+  }
+  .m-vad-chip.active {
+    background: rgba(16, 185, 129, 0.22) !important;
+    border-color: rgba(16, 185, 129, 0.65) !important;
+    color: #34d399 !important;
+  }
+  .m-input {
+    flex: 1;
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(0, 240, 255, 0.28);
+    border-radius: 12px;
+    padding: 11px 14px;
+    color: var(--text-main);
+    font-size: 15px;
+    outline: none;
+  }
+  .m-input:focus {
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 2px rgba(0, 240, 255, 0.15);
+  }
+  .m-send-btn {
+    background: linear-gradient(135deg, #00d2ff, #00f0ff);
+    color: #041019;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 12px;
+    padding: 11px 16px;
+    border: none;
+    cursor: pointer;
+    flex-shrink: 0;
+    box-shadow: 0 0 14px rgba(0, 240, 255, 0.35);
+  }
+  .m-send-btn:disabled {
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<header class="m-header">
+  <div class="m-brand">
+    <span class="m-dot"></span>
+    <span>全息伴生舱 · 掌上遥控</span>
+  </div>
+  <div class="m-status-pill" id="pc-status-pill">
+    <span class="m-status-dot"></span>
+    <span id="pc-status-text">电脑主屏已联机</span>
+  </div>
+</header>
+
+<section class="m-control-panel">
+  <div class="m-section-label">
+    <span>点选对话灵宠（电脑主屏同步切换）</span>
+    <span id="current-pet-hint" style="color:var(--cyan)">当前：棉棉</span>
+  </div>
+  <div class="m-pet-grid">
+    <div class="m-pet-btn luma active" id="pbtn-luma" onclick="selectMobilePet('luma', '棉棉')">
+      <img class="p-thumb" src="/static/pets/luma.png" alt="棉棉">
+      <span class="p-name">棉棉</span>
+      <span class="p-sub">棉花奶甜</span>
+    </div>
+    <div class="m-pet-btn pipi" id="pbtn-pipi" onclick="selectMobilePet('pipi', '桃桃')">
+      <img class="p-thumb" src="/static/pets/pipi.png" alt="桃桃">
+      <span class="p-name">桃桃</span>
+      <span class="p-sub">蜜桃甜音</span>
+    </div>
+    <div class="m-pet-btn taigo" id="pbtn-taigo" onclick="selectMobilePet('taigo', '芋圆')">
+      <img class="p-thumb" src="/static/pets/taigo.png" alt="芋圆">
+      <span class="p-name">芋圆</span>
+      <span class="p-sub">害羞少年</span>
+    </div>
+    <div class="m-pet-btn auri" id="pbtn-auri" onclick="selectMobilePet('auri', '芽芽')">
+      <img class="p-thumb" src="/static/pets/auri.png" alt="芽芽">
+      <span class="p-name">芽芽</span>
+      <span class="p-sub">森系精灵</span>
+    </div>
+    <div class="m-pet-btn nuannuan" id="pbtn-nuannuan" onclick="selectMobilePet('nuannuan', '暖暖')">
+      <img class="p-thumb" src="/static/pets/nuannuan.png" alt="暖暖">
+      <span class="p-name">暖暖</span>
+      <span class="p-sub">暖阳萌音</span>
+    </div>
+    <div class="m-pet-btn duoduo" id="pbtn-duoduo" onclick="selectMobilePet('duoduo', '朵朵')">
+      <img class="p-thumb" src="/static/pets/duoduo.png" alt="朵朵">
+      <span class="p-name">朵朵</span>
+      <span class="p-sub">云朵萌音</span>
+    </div>
+  </div>
+
+  <div class="m-stage-actions">
+    <button class="m-action-btn" onclick="triggerStageAction('dance')">全员齐舞</button>
+    <button class="m-action-btn" onclick="triggerStageAction('follow')">队伍跟随</button>
+    <button class="m-action-btn" onclick="triggerStageAction('gather')">回舱集合</button>
+    <button class="m-action-btn stop" onclick="triggerStageAction('stop_speech')">停止朗读</button>
+  </div>
+</section>
+
+<main class="m-chat-box" id="m-chat-box">
+  <div class="m-row assistant">
+    <div class="m-bubble">
+      你好呀主人！手机无线遥控已就绪。在这里输入文字点击发送，电脑屏幕上的Web主舞台就会同步弹出你的消息，并由对应的灵宠飞奔过去开口回答你！
+    </div>
+  </div>
+</main>
+
+<footer class="m-dock">
+  <div class="m-quick-scroll">
+    <div class="m-quick-chip" onclick="quickMobileSend('拍一张电脑摄像头的照片发过来看看')">摄像头实拍发图</div>
+    <div class="m-quick-chip" onclick="quickMobileSend('发一张当前页面的图片过来看看')">当前页面截图</div>
+    <div class="m-quick-chip" onclick="quickMobileSend('福州今天天气怎么样？出门要注意什么？')">福州今天天气</div>
+    <div class="m-quick-chip" onclick="quickMobileSend('看看今天的新闻，然后总结和我说说。')">总结今日新闻</div>
+    <div class="m-quick-chip" onclick="quickMobileSend('你叫什么名字？我叫什么名字？')">测试姓名记忆</div>
+    <div class="m-quick-chip" onclick="quickMobileSend('全员到齐了吗？各自打个招呼吧！')">全员打招呼</div>
+    <div class="m-quick-chip" onclick="quickMobileSend('带笑声跟我分享一件开心的事吧！')">带笑声分享开心</div>
+    <button class="m-quick-chip m-vad-chip" id="m-vad-btn" onclick="toggleMobileAutoVad()">免按语音</button>
+  </div>
+  <div class="m-asr-bar" id="m-asr-bar">
+    <div class="m-asr-dot"></div>
+    <span id="m-asr-text">正在倾听...</span>
+  </div>
+  <div class="m-input-row">
+    <button class="m-mic-btn" id="m-mic-btn" onclick="toggleMobileMic()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+        <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+        <line x1="12" x2="12" y1="19" y2="22"></line>
+      </svg>
+      <span id="m-mic-label">语音</span>
+    </button>
+    <input type="file" id="m-audio-capture" accept="audio/*" capture style="display:none" onchange="onNativeAudioCaptured(event)">
+    <input type="text" id="m-input" class="m-input" placeholder="输入文字或点左侧「语音」直接说话..." autocomplete="off">
+    <button class="m-send-btn" id="m-send-btn" onclick="sendFromMobile()">发送</button>
+  </div>
+</footer>
+
+<script>
+let selectedPet = 'luma';
+const PET_NAMES = { luma: '棉棉', pipi: '桃桃', taigo: '芋圆', auri: '芽芽', nuannuan: '暖暖', duoduo: '朵朵' };
+let currentStreamingEl = null;
+let currentStreamingBubble = null;
+let currentStreamingText = '';
+let lastRenderedTurnId = null;
+
+function highlightPetBtn(petId) {
+  selectedPet = petId;
+  ['luma', 'pipi', 'taigo', 'auri', 'nuannuan', 'duoduo'].forEach(id => {
+    const el = document.getElementById('pbtn-' + id);
+    if (el) el.classList.toggle('active', id === petId);
+  });
+  const hint = document.getElementById('current-pet-hint');
+  if (hint) hint.textContent = '当前：' + (PET_NAMES[petId] || '棉棉');
+}
+
+async function selectMobilePet(petId, petName) {
+  highlightPetBtn(petId);
+  try {
+    await fetch('/api/mobile/action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'select_pet', pet_id: petId })
+    });
+  } catch (e) {}
+}
+
+async function triggerStageAction(mode) {
+  try {
+    await fetch('/api/mobile/action', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: 'stage_mode', mode: mode })
+    });
+  } catch (e) {}
+}
+
+function appendUserBubble(text, sourceLabel) {
+  const box = document.getElementById('m-chat-box');
+  const row = document.createElement('div');
+  row.className = 'm-row user';
+  const bubble = document.createElement('div');
+  bubble.className = 'm-bubble';
+  if (sourceLabel) {
+    const tag = document.createElement('span');
+    tag.className = 'm-source-tag';
+    tag.textContent = sourceLabel;
+    bubble.appendChild(tag);
+  }
+  const span = document.createElement('span');
+  span.textContent = text;
+  bubble.appendChild(span);
+  row.appendChild(bubble);
+  box.appendChild(row);
+  box.scrollTop = box.scrollHeight;
+}
+
+function ensureAssistantStreamingBubble(turnId, petId) {
+  if (currentStreamingEl && lastRenderedTurnId === turnId) {
+    return;
+  }
+  lastRenderedTurnId = turnId;
+  currentStreamingText = '';
+  const box = document.getElementById('m-chat-box');
+  const row = document.createElement('div');
+  row.className = 'm-row assistant';
+  const bubble = document.createElement('div');
+  bubble.className = 'm-bubble';
+  const textDiv = document.createElement('div');
+  textDiv.style.color = 'var(--text-muted)';
+  textDiv.textContent = (PET_NAMES[petId] || '棉棉') + '正在电脑主屏回应...';
+  bubble.appendChild(textDiv);
+  row.appendChild(bubble);
+  box.appendChild(row);
+  box.scrollTop = box.scrollHeight;
+  currentStreamingBubble = bubble;
+  currentStreamingEl = textDiv;
+}
+
+async function sendFromMobile(overrideText) {
+  const inp = document.getElementById('m-input');
+  const text = (typeof overrideText === 'string' && overrideText.trim()) ? overrideText.trim() : inp.value.trim();
+  if (!text) return;
+  if (!overrideText) inp.value = '';
+
+  const btn = document.getElementById('m-send-btn');
+  btn.disabled = true;
+  try {
+    await fetch('/api/mobile/send', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: text,
+        pet_id: selectedPet
+      })
+    });
+  } catch (e) {
+    appendUserBubble('发送失败，请检查网络连接', '系统提示');
+  } finally {
+    setTimeout(() => { btn.disabled = false; }, 400);
+  }
+}
+
+function quickMobileSend(text) {
+  const inp = document.getElementById('m-input');
+  inp.value = text;
+  sendFromMobile();
+}
+
+document.getElementById('m-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    sendFromMobile();
+  }
+});
+
+// 建立 SSE 实时同步通道，接收电脑主屏的状态与灵宠回复流
+function connectMobileSync() {
+  const cid = 'mob_' + Math.random().toString(36).slice(2, 10);
+  const es = new EventSource(`/api/mobile/events?role=mobile&client_id=${cid}`);
+
+  es.onmessage = (ev) => {
+    try {
+      const data = JSON.parse(ev.data);
+      if (data.type === 'presence') {
+        const pill = document.getElementById('pc-status-pill');
+        const txt = document.getElementById('pc-status-text');
+        if (data.pc_clients > 0) {
+          pill.classList.remove('warn');
+          txt.textContent = `电脑主屏已联机 · 实时同步中`;
+        } else {
+          pill.classList.add('warn');
+          txt.textContent = `等待电脑打开主屏（后台仍可回复）`;
+        }
+        if (data.active_pet_id) {
+          highlightPetBtn(data.active_pet_id);
+        }
+      } else if (data.type === 'pet_switched') {
+        highlightPetBtn(data.pet_id);
+      } else if (data.type === 'chat_turn_start') {
+        appendUserBubble(data.user_text, data.from_mobile ? '手机端发送 · 已同步至电脑主屏' : '电脑端发送');
+        ensureAssistantStreamingBubble(data.turn_id, data.pet_id);
+      } else if (data.type === 'chat_vision_captured') {
+        ensureAssistantStreamingBubble(data.turn_id, data.pet_id);
+        if (currentStreamingBubble) {
+          const chip = document.createElement('div');
+          chip.className = 'm-chip vision';
+          chip.textContent = data.chip_title || '全息视觉已抓拍';
+          currentStreamingBubble.insertBefore(chip, currentStreamingEl);
+          if (data.image_data_uri) {
+            const card = document.createElement('div');
+            card.className = 'm-vision-card';
+            const modeLabel = data.mode === 'camera' ? '电脑摄像头实景抓拍' : '当前电脑页面实时截图';
+            card.innerHTML = `
+              <img src="${data.image_data_uri}" alt="${modeLabel}" onclick="window.open(this.src, '_blank')">
+              <div class="m-vision-bar">
+                <span>${modeLabel}</span>
+                <a href="${data.image_data_uri}" download="伴生舱视觉_${Date.now()}.jpg">保存图片</a>
+              </div>
+            `;
+            currentStreamingBubble.insertBefore(card, currentStreamingEl);
+            const box = document.getElementById('m-chat-box');
+            box.scrollTop = box.scrollHeight;
+          }
+        }
+      } else if (data.type === 'chat_web_searched') {
+        ensureAssistantStreamingBubble(data.turn_id, data.pet_id);
+        if (currentStreamingBubble) {
+          const chip = document.createElement('div');
+          chip.className = 'm-chip web';
+          chip.textContent = data.chip_title || '全息联网已检索';
+          currentStreamingBubble.insertBefore(chip, currentStreamingEl);
+        }
+      } else if (data.type === 'chat_memory_recalled') {
+        ensureAssistantStreamingBubble(data.turn_id, data.pet_id);
+        if (currentStreamingBubble) {
+          const chip = document.createElement('div');
+          chip.className = 'm-chip mem';
+          chip.textContent = `长期记忆已唤醒 (${data.count}条)`;
+          currentStreamingBubble.insertBefore(chip, currentStreamingEl);
+        }
+      } else if (data.type === 'chat_text_delta') {
+        ensureAssistantStreamingBubble(data.turn_id, data.pet_id);
+        if (currentStreamingEl) {
+          currentStreamingEl.style.color = 'var(--text-main)';
+          currentStreamingText += data.delta;
+          currentStreamingEl.textContent = currentStreamingText.replace(/\[(笑|笑声|叹气|喘气)\]/g, ' ($1) ');
+          const box = document.getElementById('m-chat-box');
+          box.scrollTop = box.scrollHeight;
+        }
+      } else if (data.type === 'pet_selected') {
+        if (data.pet_id) highlightPetBtn(data.pet_id);
+        isPetSpeakingNow = false;
+        mobileMuteUntilTs = 0;
+      } else if (data.type === 'chat_chunk') {
+        isPetSpeakingNow = true;
+        lastMobileSpeakTs = performance.now();
+      } else if (data.type === 'chat_turn_done') {
+        currentStreamingEl = null;
+        currentStreamingBubble = null;
+        const remMs = (typeof data.speaker_remaining_s === 'number' && data.speaker_remaining_s > 0)
+          ? (data.speaker_remaining_s * 1000 + 1500)
+          : 1500;
+        mobileMuteUntilTs = performance.now() + remMs;
+        lastMobileSpeakTs = performance.now();
+        setTimeout(() => { isPetSpeakingNow = false; }, remMs);
+      }
+    } catch (e) {}
+  };
+
+  es.onerror = () => {
+    es.close();
+    setTimeout(connectMobileSync, 2500);
+  };
+}
+
+// =========================================================================
+// 手机端离线语音转文字 (GTCRN + SileroVAD + CAM++ 声纹 + SenseVoice INT8)
+// 1. 支持 HTTPS / 公网隧道下直接通过浏览器 MediaRecorder 录音识别
+// 2. 支持局域网 HTTP 下自动拉起手机原生录音器或调用电脑端硬件麦克风兜底
+// 3. 支持「免按语音」自动 VAD 对讲 + 伙伴说话防回声保护
+// =========================================================================
+let mIsRecording = false;
+let mMicMode = 'browser'; // 'browser' | 'pc_hw'
+let mRecorder = null;
+let mChunks = [];
+let mStream = null;
+let isPetSpeakingNow = false;
+let lastMobileSpeakTs = 0;
+let mobileMuteUntilTs = 0;
+
+function setMobileAsrBar(visible, text) {
+  const bar = document.getElementById('m-asr-bar');
+  const txt = document.getElementById('m-asr-text');
+  if (!bar || !txt) return;
+  if (visible) {
+    bar.classList.add('active');
+    txt.textContent = text;
+  } else {
+    bar.classList.remove('active');
+  }
+}
+
+async function sendMobileAudioBlob(blob, filename = 'mobile_speech.webm', source = 'manual') {
+  const btn = document.getElementById('m-mic-btn');
+  const label = document.getElementById('m-mic-label');
+  if (source === 'manual') {
+    if (btn) btn.classList.remove('recording');
+    if (label) label.textContent = '识别中';
+  }
+  setMobileAsrBar(true, '正在降噪、声纹核验与离线识别...');
+
+  try {
+    const fd = new FormData();
+    fd.append('file', blob, filename);
+    const res = await fetch(`/api/asr/transcribe?source=${encodeURIComponent(source)}`, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (label && !mIsRecording) label.textContent = '语音';
+    if (data.success && data.text) {
+      setMobileAsrBar(true, `识别成功：${data.text}`);
+      setTimeout(() => { if (!mIsRecording && !mVadEnabled) setMobileAsrBar(false, ''); }, 2000);
+      if (data.called_pet_id) {
+        highlightPetBtn(data.called_pet_id);
+      }
+      sendFromMobile(data.text);
+    } else {
+      setMobileAsrBar(true, data.message || data.error || '未检测到清晰语音，请重试');
+      setTimeout(() => { if (!mIsRecording && !mVadEnabled) setMobileAsrBar(false, ''); }, 2000);
+    }
+  } catch (e) {
+    if (label) label.textContent = '语音';
+    setMobileAsrBar(true, '语音识别请求失败');
+    setTimeout(() => { if (!mIsRecording && !mVadEnabled) setMobileAsrBar(false, ''); }, 2000);
+  }
+}
+
+function onNativeAudioCaptured(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  sendMobileAudioBlob(file, file.name || 'capture.m4a');
+  ev.target.value = '';
+}
+
+async function toggleMobileMic() {
+  const btn = document.getElementById('m-mic-btn');
+  const label = document.getElementById('m-mic-label');
+
+  if (mIsRecording) {
+    mIsRecording = false;
+    if (mMicMode === 'browser' && mRecorder && mRecorder.state !== 'inactive') {
+      mRecorder.stop();
+    } else if (mMicMode === 'pc_hw') {
+      if (btn) btn.classList.remove('recording');
+      if (label) label.textContent = '识别中';
+      setMobileAsrBar(true, 'SenseVoice 极速离线语音识别中...');
+      try {
+        const res = await fetch('/api/asr/pc_mic_stop', { method: 'POST' });
+        const data = await res.json();
+        if (label) label.textContent = '语音';
+        if (data.success && data.text) {
+          setMobileAsrBar(true, `识别成功：${data.text}`);
+          setTimeout(() => { if (!mIsRecording && !mVadEnabled) setMobileAsrBar(false, ''); }, 2000);
+          if (data.called_pet_id) highlightPetBtn(data.called_pet_id);
+          sendFromMobile(data.text);
+        } else {
+          setMobileAsrBar(true, data.message || data.error || '未检测到清晰人声');
+          setTimeout(() => { if (!mIsRecording && !mVadEnabled) setMobileAsrBar(false, ''); }, 2000);
+        }
+      } catch (e) {
+        if (label) label.textContent = '语音';
+        setMobileAsrBar(false, '');
+      }
+    }
+    return;
+  }
+
+  if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+    try {
+      mStream = await navigator.mediaDevices.getUserMedia({
+        audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+      });
+      mMicMode = 'browser';
+      mChunks = [];
+      mRecorder = new MediaRecorder(mStream);
+      mRecorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) mChunks.push(e.data);
+      };
+      mRecorder.onstop = () => {
+        if (mStream) {
+          mStream.getTracks().forEach(t => t.stop());
+          mStream = null;
+        }
+        const blob = new Blob(mChunks, { type: mRecorder.mimeType || 'audio/webm' });
+        if (blob.size > 400) {
+          sendMobileAudioBlob(blob);
+        } else {
+          if (btn) btn.classList.remove('recording');
+          if (label) label.textContent = '语音';
+          setMobileAsrBar(false, '');
+        }
+      };
+      mRecorder.start();
+      mIsRecording = true;
+      if (btn) btn.classList.add('recording');
+      if (label) label.textContent = '说完了';
+      setMobileAsrBar(true, '正在倾听您说话...（说完请再次点击「说完了」）');
+      return;
+    } catch (e) {
+      // 降级到电脑端内置麦克风或手机原生录音
+    }
+  }
+
+  // 若在房间内通过局域网 HTTP 访问，可直接驱动电脑端高灵敏度麦克风收音
+  try {
+    const res = await fetch('/api/asr/pc_mic_start', { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      mMicMode = 'pc_hw';
+      mIsRecording = true;
+      if (btn) btn.classList.add('recording');
+      if (label) label.textContent = '说完了';
+      setMobileAsrBar(true, '正在通过电脑麦克风倾听...（说完请点「说完了」）');
+      return;
+    }
+  } catch (e) {}
+
+  // 终极兜底：拉起手机系统级录音器
+  const capInput = document.getElementById('m-audio-capture');
+  if (capInput) capInput.click();
+}
+
+let mVadEnabled = false;
+let mVadAudioCtx = null;
+let mVadStream = null;
+let mVadAnalyser = null;
+let mVadTimer = null;
+let mVadRec = null;
+let mVadChunks = [];
+let mVadSpeaking = false;
+let mVadSpeechStart = 0;
+let mVadSilenceStart = 0;
+
+async function toggleMobileAutoVad() {
+  const btn = document.getElementById('m-vad-btn');
+  if (mVadEnabled) {
+    mVadEnabled = false;
+    if (mVadTimer) { clearInterval(mVadTimer); mVadTimer = null; }
+    if (mVadRec && mVadRec.state !== 'inactive') {
+      try { mVadRec.stop(); } catch (e) {}
+    }
+    if (mVadStream) {
+      mVadStream.getTracks().forEach(t => t.stop());
+      mVadStream = null;
+    }
+    if (mVadAudioCtx) {
+      try { mVadAudioCtx.close(); } catch (e) {}
+      mVadAudioCtx = null;
+    }
+    if (btn) {
+      btn.classList.remove('active');
+      btn.textContent = '免按语音';
+    }
+    setMobileAsrBar(false, '');
+    return;
+  }
+
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    setMobileAsrBar(true, '请使用 HTTPS 公网隧道链接开启免按语音，或直接点左下角「语音」按钮');
+    setTimeout(() => setMobileAsrBar(false, ''), 2800);
+    return;
+  }
+
+  try {
+    mVadStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }
+    });
+    mVadAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const src = mVadAudioCtx.createMediaStreamSource(mVadStream);
+    mVadAnalyser = mVadAudioCtx.createAnalyser();
+    mVadAnalyser.fftSize = 512;
+    src.connect(mVadAnalyser);
+
+    mVadEnabled = true;
+    mVadSpeaking = false;
+    if (btn) {
+      btn.classList.add('active');
+      btn.textContent = '免按开启中';
+    }
+    setMobileAsrBar(true, '免按语音已开启 · 直接开口说话即可');
+
+    const buf = new Float32Array(mVadAnalyser.fftSize);
+    mVadTimer = setInterval(() => {
+      if (!mVadEnabled || !mVadAnalyser) return;
+      const nowTick = performance.now();
+      if (isPetSpeakingNow || nowTick < mobileMuteUntilTs || (nowTick - lastMobileSpeakTs < 1500)) {
+        if (mVadSpeaking && mVadRec && mVadRec.state === 'recording') {
+          mVadSpeaking = false;
+          mVadChunks = [];
+          try { mVadRec.stop(); } catch (e) {}
+        }
+        setMobileAsrBar(true, '伙伴回复中 · 自动防回声静默');
+        return;
+      }
+
+      mVadAnalyser.getFloatTimeDomainData(buf);
+      let sumSq = 0;
+      for (let i = 0; i < buf.length; i++) sumSq += buf[i] * buf[i];
+      const rms = Math.sqrt(sumSq / buf.length);
+      const now = performance.now();
+
+      if (!mVadSpeaking) {
+        setMobileAsrBar(true, '免按语音待命 · 请直接说话');
+        if (rms > 0.028) {
+          if (!mVadSpeechStart) mVadSpeechStart = now;
+          if (now - mVadSpeechStart > 160) {
+            mVadSpeaking = true;
+            mVadSilenceStart = 0;
+            mVadChunks = [];
+            try {
+              mVadRec = new MediaRecorder(mVadStream);
+              mVadRec.ondataavailable = (ev) => {
+                if (ev.data && ev.data.size > 0) mVadChunks.push(ev.data);
+              };
+              mVadRec.onstop = () => {
+                if (!mVadEnabled) return;
+                const blob = new Blob(mVadChunks, { type: mVadRec.mimeType || 'audio/webm' });
+                if (blob.size > 900) sendMobileAudioBlob(blob, 'mobile_vad.webm', 'vad');
+              };
+              mVadRec.start();
+              setMobileAsrBar(true, '检测到说话 · 正在收录语音...');
+            } catch (e) {
+              mVadSpeaking = false;
+            }
+          }
+        } else {
+          mVadSpeechStart = 0;
+        }
+      } else {
+        if (rms < 0.017) {
+          if (!mVadSilenceStart) mVadSilenceStart = now;
+          if (now - mVadSilenceStart > 850) {
+            mVadSpeaking = false;
+            mVadSpeechStart = 0;
+            mVadSilenceStart = 0;
+            if (mVadRec && mVadRec.state === 'recording') {
+              try { mVadRec.stop(); } catch (e) {}
+            }
+          }
+        } else {
+          mVadSilenceStart = 0;
+        }
+      }
+    }, 80);
+  } catch (e) {
+    setMobileAsrBar(true, '请点击左下角「语音」按钮进行说话');
+    setTimeout(() => setMobileAsrBar(false, ''), 2500);
+  }
+}
+
+connectMobileSync();
+</script>
+</body>
+</html>

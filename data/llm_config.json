@@ -1,0 +1,11 @@
+{
+  "mode": "local",
+  "local_model": "qwen2.5:3b",
+  "provider": "deepseek",
+  "base_url": "https://api.deepseek.com/v1",
+  "api_key": "sk-bc45f21318b14eae8b2b8a98dc67a0a3",
+  "cloud_model": "deepseek-chat",
+  "saved_keys": {
+    "deepseek": "sk-bc45f21318b14eae8b2b8a98dc67a0a3"
+  }
+}

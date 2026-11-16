@@ -1,0 +1,31 @@
+# =================================================================
+# Git 忽略配置 · 全息桌面伴生萌宠系统
+# =================================================================
+
+# 1. Python 虚拟环境与运行时字节码
+.venv/
+venv/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# 2. 超大模型权重（GitHub 单文件严格限制 100MB，运行 bash setup.sh 自动秒级补齐）
+models/*.gguf
+data/sensevoice_int8/*.onnx
+data/fastembed_cache/
+
+# 3. 运行缓存与临时文件
+.cache/
+.local_home/
+*.log
+static/temp_*.wav
+
+# 4. 外部独立参考仓库
+ai-design-skills/
+breeze-tts-repo/
+
+# 5. 系统无用杂项
+.DS_Store
+Thumbs.db

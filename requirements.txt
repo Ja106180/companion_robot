@@ -1,0 +1,15 @@
+# 全息桌面伴生萌宠与离线语音系统核心依赖
+# 建议环境: Python 3.10+
+
+fastapi>=0.110.0
+uvicorn>=0.28.0
+python-multipart>=0.0.9
+sherpa-onnx>=1.10.0
+numpy>=1.24.0,<2.3.0
+mem0ai>=0.1.30
+qdrant-client>=1.8.0
+fastembed>=0.2.0
+qrcode[pil]>=7.4.2
+pillow>=10.0.0
+opencv-python-headless>=4.8.0
+mss>=9.0.0
