@@ -13,3 +13,5 @@ qrcode[pil]>=7.4.2
 pillow>=10.0.0
 opencv-python-headless>=4.8.0
 mss>=9.0.0
+insightface>=0.7.3
+onnxruntime>=1.16.0

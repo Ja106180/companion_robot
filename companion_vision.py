@@ -53,13 +53,21 @@ class CompanionVisionEngine:
     def detect_vision_intent(self, user_text: str) -> str | None:
         """
         返回:
-          - 'camera': 用户要求调用电脑摄像头拍照/看看用户/看看家里
+          - 'camera': 用户要求调用电脑摄像头拍照/看看用户/人脸识别
+          - 'switch_face': 用户要求切换看旁边的人/换个人看
           - 'screen': 用户要求截取当前电脑页面/屏幕画面发过来
           - None: 普通对话
         """
         t = user_text.strip()
         if not t:
             return None
+
+        # 显式切换人脸焦点意图
+        switch_face_pattern = re.compile(
+            r"(看.*旁边.*谁|看.*旁边.*人|看看旁边|看看另一个人|看.*另外.*人|换个人看|看下一个人|切换目标|旁边是谁)"
+        )
+        if switch_face_pattern.search(t):
+            return "switch_face"
 
         # 显式屏幕/页面截图意图
         screen_pattern = re.compile(
@@ -68,9 +76,9 @@ class CompanionVisionEngine:
         if screen_pattern.search(t):
             return "screen"
 
-        # 显式摄像头/拍照/看人意图
+        # 显式摄像头/拍照/看人意图与人脸识别
         camera_pattern = re.compile(
-            r"(摄像头|拍张照|拍一张|拍照|拍个照|自拍|拍.*画面|看.*我在干嘛|看.*我穿什么|看.*我手里|看.*电脑前|发.*照片)"
+            r"(摄像头|拍张照|拍一张|拍照|拍个照|自拍|拍.*画面|看.*我在干嘛|看.*我穿什么|看.*我手里|看.*电脑前|发.*照片|看看我是谁|认得我吗|我是谁|认出我|看.*前面.*谁|看看镜头|人脸识别|看看我)"
         )
         if camera_pattern.search(t):
             return "camera"
@@ -85,39 +93,63 @@ class CompanionVisionEngine:
     # ------------------------------------------------------------------
     # 2. 电脑自带摄像头高清抓拍 (OpenCV)
     # ------------------------------------------------------------------
-    def capture_webcam(self) -> dict[str, Any]:
+    def capture_webcam(self, target_index: int | None = None) -> dict[str, Any]:
         t0 = time.time()
         cap = None
         try:
-            # 尝试打开默认摄像头 /dev/video0
-            cap = cv2.VideoCapture(0)
-            if not cap.isOpened():
-                cap = cv2.VideoCapture(1)
-            if not cap.isOpened():
-                return {
-                    "success": False,
-                    "error": "未检测到可用的电脑摄像头（/dev/video0 未就绪或被其他程序占用）",
-                }
-
-            # 尝试设置 1280x720 高清分辨率
-            cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-            cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
-
+            # 优先从常驻的 companion_sentinel 内存中直接获取最新帧（0ms极速抓拍且无硬件占用冲突）
             frame = None
-            # 连续读取 6 帧让摄像头完成自动曝光与白平衡调整
-            for _ in range(6):
-                ret, f = cap.read()
-                if ret and f is not None:
-                    frame = f
-                time.sleep(0.02)
+            try:
+                from companion_sentinel import companion_sentinel
+                frame = companion_sentinel.get_latest_clean_frame()
+            except Exception:
+                frame = None
+
+            if frame is None:
+                # 后备方案：直接开启 OpenCV 抓拍
+                cap = cv2.VideoCapture(0)
+                if not cap.isOpened():
+                    cap = cv2.VideoCapture(1)
+                if not cap.isOpened():
+                    return {
+                        "success": False,
+                        "error": "未检测到可用的电脑摄像头（/dev/video0 未就绪或被其他程序占用）",
+                    }
+
+                cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+                cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+
+                for _ in range(6):
+                    ret, f = cap.read()
+                    if ret and f is not None:
+                        frame = f
+                    time.sleep(0.02)
+                cap.release()
+                cap = None
 
             if frame is None:
                 return {"success": False, "error": "摄像头读取画面帧失败"}
 
             h, w = frame.shape[:2]
 
-            # 轻量级 OpenCV 视觉感知（人脸检测 + 光线亮度分析，耗时 <10ms，0 GPU 显存）
+            # 轻量级 OpenCV 基础感知（光线亮度分析）
             scene_desc = self._analyze_camera_frame_opencv(frame)
+
+            # InsightFace 深度人脸识别与多目标视线锁定
+            face_analysis = None
+            try:
+                from companion_face import companion_face
+                face_analysis = companion_face.analyze_frame(frame, target_index=target_index)
+            except Exception as face_err:
+                logger.warning(f"Face analysis error: {face_err}")
+
+            chip_title = f"全息视线对焦 · 电脑摄像头实景 ({w}×{h})"
+            if face_analysis and face_analysis.get("locked_target"):
+                lt = face_analysis["locked_target"]
+                chip_title = f"视线锁定 · {lt['display_badge']}"
+                scene_desc += f" 【人脸锁定】：{lt['display_badge']}。"
+                if face_analysis.get("faces_count", 0) > 1:
+                    scene_desc += f"（画面中共有 {face_analysis['faces_count']} 位人物，已为您选择性对焦目标 {lt['target_index']+1}）"
 
             # 编码为高质量 JPEG Base64
             encode_params = [int(cv2.IMWRITE_JPEG_QUALITY), 86]
@@ -137,7 +169,8 @@ class CompanionVisionEngine:
                 "image_data_uri": f"data:image/jpeg;base64,{jpg_b64}",
                 "raw_b64": jpg_b64,
                 "opencv_summary": scene_desc,
-                "chip_title": f"全息视觉已抓拍 · 电脑摄像头实景 ({w}×{h} · {ms}ms)",
+                "chip_title": chip_title,
+                "face_analysis": face_analysis,
             }
         except Exception as exc:
             logger.warning(f"Webcam capture error: {exc}")
@@ -374,7 +407,13 @@ class CompanionVisionEngine:
             return None
 
         logger.info(f"[Vision] Triggered vision capture intent: {intent}")
-        if intent == "camera":
+        if intent == "switch_face":
+            from companion_face import companion_face
+            switch_res = companion_face.switch_to_next_target()
+            next_idx = switch_res.get("locked_index")
+            res = self.capture_webcam(target_index=next_idx)
+            intent = "camera"
+        elif intent == "camera":
             res = self.capture_webcam()
         else:
             res = self.capture_screen()
@@ -395,11 +434,22 @@ class CompanionVisionEngine:
             if vlm_desc:
                 visual_detail += f" AI视觉深度识图结果：{vlm_desc}"
 
+        face_greeting_hint = ""
+        fa = res.get("face_analysis")
+        if fa and fa.get("locked_target"):
+            lt = fa["locked_target"]
+            greeting = fa.get("greeting_text", "")
+            face_greeting_hint = (
+                f"\n【人脸视线锁定指令】：系统已锁定当前目标【{lt['label']}】（{lt['display_badge']}）。"
+                f"请在回答中必须包含问候语义「{greeting}」，并以你的萌宠性格亲切自然地与对方交流！"
+            )
+
         action_name = "电脑自带摄像头实景照片" if intent == "camera" else "当前电脑页面/屏幕高清截图"
         res["context_text"] = (
             f"【全息视觉已成功执行】：系统刚刚已经帮主人抓拍了一张「{action_name}」，"
             f"并且这张图片已经实时显示在主人的电脑主屏和手机聊天窗口里了！\n"
             f"【画面实时感知信息】：{visual_detail}"
+            f"{face_greeting_hint}"
         )
         return res
 

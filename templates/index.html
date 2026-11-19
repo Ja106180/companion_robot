@@ -100,6 +100,46 @@
     color: var(--text-main);
   }
 
+  .system-clock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(10, 18, 32, 0.65);
+    border: 1px solid rgba(0, 240, 255, 0.22);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    color: #94a3b8;
+    backdrop-filter: blur(12px);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "JetBrains Mono", monospace;
+    letter-spacing: 0.3px;
+    user-select: none;
+    transition: all 0.25s ease;
+  }
+  .system-clock-badge:hover {
+    border-color: rgba(0, 240, 255, 0.5);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+  }
+  .system-clock-badge .clock-icon {
+    font-size: 11px;
+    color: var(--cyan);
+  }
+  .system-clock-badge .clock-date {
+    color: #94a3b8;
+    font-size: 10.5px;
+  }
+  .system-clock-badge .clock-week {
+    color: #cbd5e1;
+    font-weight: 500;
+    font-size: 10.5px;
+  }
+  .system-clock-badge .clock-time {
+    color: var(--cyan);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    text-shadow: 0 0 6px rgba(0, 240, 255, 0.35);
+  }
+
   .nav-right {
     display: flex;
     align-items: center;
@@ -175,9 +215,17 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 20px;
+    padding: 16px;
     position: relative;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .bento-card-pet::-webkit-scrollbar {
+    width: 4px;
+  }
+  .bento-card-pet::-webkit-scrollbar-thumb {
+    background: rgba(0, 240, 255, 0.2);
+    border-radius: 4px;
   }
 
   .pet-card-header {
@@ -1269,6 +1317,882 @@
   .vision-dl-link:hover {
     text-decoration: underline;
   }
+  .vision-img-wrap {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+  .face-edge-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    background: rgba(5, 12, 24, 0.82);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 240, 255, 0.45);
+    color: #00f0ff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    pointer-events: none;
+    z-index: 4;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+  }
+  .face-badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00f0ff;
+    box-shadow: 0 0 6px #00f0ff;
+  }
+  .face-reticle-cyan {
+    position: absolute;
+    box-sizing: border-box;
+    border: 1.5px solid rgba(0, 240, 255, 0.85);
+    border-radius: 6px;
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.35), inset 0 0 8px rgba(0, 240, 255, 0.2);
+    pointer-events: none;
+    z-index: 3;
+    transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .face-reticle-cyan::before {
+    content: '';
+    position: absolute;
+    top: -2px; left: -2px;
+    width: 10px; height: 10px;
+    border-color: #00f0ff;
+    border-style: solid;
+    border-width: 2.5px 0 0 2.5px;
+  }
+  .face-reticle-cyan::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; right: -2px;
+    width: 10px; height: 10px;
+    border-color: #00f0ff;
+    border-style: solid;
+    border-width: 0 2.5px 2.5px 0;
+  }
+  .face-targets-hud {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    gap: 6px;
+    justify-content: flex-start;
+    z-index: 5;
+    overflow-x: auto;
+  }
+  .target-hud-pill {
+    background: rgba(8, 16, 30, 0.88);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: rgba(255, 255, 255, 0.85);
+    border-radius: 12px;
+    padding: 3px 10px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+  }
+  .target-hud-pill:hover {
+    border-color: rgba(0, 240, 255, 0.6);
+    color: #fff;
+  }
+  .target-hud-pill.active {
+    border-color: #00f0ff;
+    color: #00f0ff;
+    background: rgba(0, 240, 255, 0.18);
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.35);
+    font-weight: 600;
+  }
+  .face-item-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 6px 10px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    font-size: 12px;
+  }
+  .face-item-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .face-item-thumb {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid rgba(0, 240, 255, 0.3);
+  }
+  .face-item-thumb.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 240, 255, 0.1);
+    color: var(--cyan);
+    font-size: 11px;
+  }
+  .face-item-name {
+    font-weight: 500;
+    color: var(--text-main);
+  }
+  .face-item-date {
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+  .face-del-btn {
+    background: none;
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    color: var(--rose);
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .face-del-btn:hover {
+    background: rgba(244, 63, 94, 0.15);
+    border-color: var(--rose);
+  }
+  /* 实时视线哨兵监视窗 (左侧 Bento 面板) */
+  .sentinel-monitor-box {
+    margin: 6px 0;
+    padding: 7px 9px;
+    background: rgba(10, 18, 32, 0.75);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(0, 240, 255, 0.22);
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), inset 0 0 12px rgba(0, 240, 255, 0.04);
+    transition: all 0.25s ease;
+  }
+  .sentinel-monitor-box:hover {
+    border-color: rgba(0, 240, 255, 0.4);
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45), 0 0 12px rgba(0, 240, 255, 0.15);
+  }
+  .sentinel-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 11px;
+  }
+  .sentinel-title-grp {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #cbd5e1;
+    font-weight: 500;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .sentinel-label {
+    font-size: 10.5px;
+    white-space: nowrap;
+  }
+  .sentinel-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #00f0ff;
+    box-shadow: 0 0 8px #00f0ff;
+    transition: all 0.3s ease;
+  }
+  .sentinel-status-dot.paused {
+    background: #64748b;
+    box-shadow: none;
+  }
+  .sentinel-status-dot.pulse {
+    animation: sentinelPulse 2s infinite ease-in-out;
+  }
+  @keyframes sentinelPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.85); }
+  }
+  .sentinel-switches-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+  }
+  .sentinel-sw-item {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .sentinel-sw-name {
+    font-size: 9.5px;
+    color: #94a3b8;
+    transition: color 0.2s ease;
+    white-space: nowrap;
+  }
+  .sentinel-sw-item:hover .sentinel-sw-name {
+    color: #cbd5e1;
+  }
+  .sentinel-mini-pill {
+    width: 25px;
+    height: 14px;
+    border-radius: 8px;
+    background: rgba(100, 116, 139, 0.35);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    position: relative;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .sentinel-mini-pill:hover {
+    border-color: rgba(0, 240, 255, 0.6);
+  }
+  .sentinel-mini-pill.on {
+    background: rgba(0, 240, 255, 0.25);
+    border-color: var(--cyan);
+    box-shadow: 0 0 8px rgba(0, 240, 255, 0.45);
+  }
+  .sentinel-mini-knob {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #94a3b8;
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .sentinel-mini-pill.on .sentinel-mini-knob {
+    left: 11px;
+    background: #00f0ff;
+    box-shadow: 0 0 6px #00f0ff;
+  }
+  .sentinel-screen-wrap {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #020610;
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #sentinel-live-feed {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  .sentinel-scanline {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(0, 240, 255, 0.6), transparent);
+    box-shadow: 0 0 6px rgba(0, 240, 255, 0.8);
+    pointer-events: none;
+    animation: sentinelScan 3.5s linear infinite;
+    z-index: 2;
+  }
+  @keyframes sentinelScan {
+    0% { top: 0; opacity: 0; }
+    15% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+  .sentinel-chip-badge {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    background: rgba(6, 12, 24, 0.85);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    color: #e2e8f0;
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 10px;
+    font-family: var(--font-mono, monospace);
+    pointer-events: none;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .sentinel-cooldown-tag {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background: rgba(245, 158, 11, 0.28);
+    border: 1px solid rgba(245, 158, 11, 0.65);
+    color: #fde047;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 9px;
+    font-family: var(--font-mono, monospace);
+    pointer-events: none;
+    z-index: 3;
+  }
+  .sentinel-guard-tag {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background: rgba(239, 68, 68, 0.25);
+    border: 1px solid rgba(239, 68, 68, 0.6);
+    color: #fca5a5;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 9px;
+    font-family: var(--font-mono, monospace);
+    pointer-events: none;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .sentinel-guard-tag.alerting {
+    background: rgba(220, 38, 38, 0.85);
+    border-color: #ef4444;
+    color: #fff;
+    animation: guardAlertPulse 0.8s infinite alternate;
+  }
+  .sentinel-gear-btn {
+    background: transparent;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+    padding: 0 2px;
+    opacity: 0.65;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    outline: none;
+  }
+  .sentinel-gear-btn:hover {
+    opacity: 1;
+    transform: rotate(30deg);
+  }
+  .sentinel-mini-pill.guard-on {
+    background: rgba(239, 68, 68, 0.28);
+    border-color: #ef4444;
+    box-shadow: 0 0 8px rgba(239, 68, 68, 0.45);
+  }
+  .sentinel-mini-pill.guard-on .sentinel-mini-knob {
+    left: 13px;
+    background: #ef4444;
+    box-shadow: 0 0 6px #ef4444;
+  }
+  .sentinel-guard-panel {
+    background: rgba(10, 16, 30, 0.95);
+    border: 1px solid rgba(239, 68, 68, 0.35);
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    animation: fadeIn 0.2s ease;
+  }
+  .guard-panel-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    font-size: 11px;
+  }
+  .guard-panel-label {
+    color: #94a3b8;
+    font-size: 10.5px;
+    white-space: nowrap;
+  }
+  .guard-time-grp {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .guard-time-input, .guard-select {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    color: #f1f5f9;
+    border-radius: 4px;
+    font-size: 11px;
+    padding: 2px 5px;
+    outline: none;
+    font-family: inherit;
+  }
+  .guard-time-input:focus, .guard-select:focus {
+    border-color: #ef4444;
+  }
+  .guard-sep {
+    color: #64748b;
+    font-size: 10px;
+  }
+  .guard-sub-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .guard-status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    color: #cbd5e1;
+    padding-top: 2px;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .guard-status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #64748b;
+    transition: all 0.25s ease;
+  }
+  .guard-status-dot.active {
+    background: #ef4444;
+    box-shadow: 0 0 6px #ef4444;
+  }
+  .guard-status-dot.idle {
+    background: #38bdf8;
+    box-shadow: 0 0 6px #38bdf8;
+  }
+  .sentinel-screen-wrap.guard-alerting {
+    animation: guardBorderFlash 0.8s infinite alternate !important;
+  }
+  @keyframes guardBorderFlash {
+    0% { border-color: rgba(239, 68, 68, 0.5); box-shadow: 0 0 8px rgba(239, 68, 68, 0.3); }
+    100% { border-color: #ef4444; box-shadow: 0 0 20px rgba(239, 68, 68, 0.85); }
+  }
+  @keyframes guardAlertPulse {
+    0% { opacity: 0.85; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.05); }
+  }
+  /* 聊天窗口中的陌生人闯入警报卡片 */
+  .guard-alert-row .chat-bubble {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.14) 0%, rgba(15, 23, 42, 0.95) 100%) !important;
+    border: 1px solid rgba(239, 68, 68, 0.55) !important;
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.22);
+    max-width: 440px;
+  }
+  .guard-alert-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(239, 68, 68, 0.25);
+    margin-bottom: 8px;
+  }
+  .guard-alert-title {
+    font-weight: 600;
+    font-size: 12.5px;
+    color: #f87171;
+  }
+  .guard-alert-time {
+    margin-left: auto;
+    font-size: 10px;
+    color: #94a3b8;
+    font-family: var(--font-mono, monospace);
+  }
+  .guard-alert-body {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .guard-snapshot-wrap {
+    flex-shrink: 0;
+    width: 120px;
+    height: 90px;
+    border-radius: 6px;
+    overflow: hidden;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    background: #000;
+  }
+  .guard-intruder-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .guard-alert-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .guard-alert-desc {
+    font-size: 11px;
+    color: #e2e8f0;
+    margin-bottom: 4px;
+  }
+  .guard-speech-text {
+    font-size: 12px;
+    color: #fca5a5;
+    line-height: 1.4;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .guard-speech-meta {
+    font-size: 10px;
+    color: #94a3b8;
+  }
+
+  /* ========================================================= */
+  /* 智能早晨唤醒与知识库日程备忘中枢样式                      */
+  /* ========================================================= */
+  .alarm-ringing-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 99999;
+    background: rgba(10, 15, 29, 0.88);
+    backdrop-filter: blur(20px) saturate(180%);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .alarm-ringing-overlay.active {
+    display: flex;
+    animation: fadeIn 0.25s ease-out;
+  }
+  .alarm-ringing-card {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
+    border: 1.5px solid rgba(245, 158, 11, 0.7);
+    box-shadow: 0 0 50px rgba(245, 158, 11, 0.4), 0 20px 60px rgba(0, 0, 0, 0.75);
+    border-radius: 20px;
+    padding: 32px 36px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .alarm-bell-icon {
+    font-size: 52px;
+    line-height: 1;
+    display: inline-block;
+    animation: bellRingingSwing 0.65s infinite alternate cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.85));
+    margin-bottom: 12px;
+  }
+  @keyframes bellRingingSwing {
+    0% { transform: rotate(-22deg) scale(1.08); }
+    100% { transform: rotate(22deg) scale(1.08); }
+  }
+  .alarm-ring-title {
+    font-size: 19px;
+    font-weight: 700;
+    color: #fbbf24;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .alarm-ring-label {
+    font-size: 15px;
+    color: #e2e8f0;
+    margin-bottom: 14px;
+    font-weight: 500;
+  }
+  .alarm-ring-memo-preview {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px dashed rgba(245, 158, 11, 0.4);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: #fde68a;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    text-align: left;
+    max-height: 90px;
+    overflow-y: auto;
+  }
+  .alarm-ring-timer-box {
+    background: rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+  }
+  .alarm-ring-countdown {
+    font-family: var(--font-mono, monospace);
+    font-size: 34px;
+    font-weight: 700;
+    color: #38bdf8;
+    text-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+    letter-spacing: 2px;
+  }
+  .alarm-ring-timer-hint {
+    font-size: 11.5px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+  .btn-stop-ringing-action {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 28px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 22px rgba(245, 158, 11, 0.55);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-stop-ringing-action:hover {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    box-shadow: 0 0 30px rgba(245, 158, 11, 0.85);
+    transform: translateY(-2px);
+  }
+
+  /* 闹钟抽屉列表卡片 */
+  .alarm-clock-display-card {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(15, 23, 42, 0.8));
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-radius: 12px;
+    padding: 14px 18px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .alarm-clock-digit {
+    font-family: var(--font-mono, monospace);
+    font-size: 26px;
+    font-weight: 700;
+    color: #fbbf24;
+    letter-spacing: 1.5px;
+  }
+  .alarm-clock-sub {
+    font-size: 11.5px;
+    color: #cbd5e1;
+    margin-top: 2px;
+  }
+  .alarm-type-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .alarm-type-tab {
+    flex: 1;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    padding: 7px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .alarm-type-tab.active {
+    background: rgba(245, 158, 11, 0.18);
+    border-color: #f59e0b;
+    color: #fbbf24;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.25);
+  }
+  .alarm-card-item {
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    transition: all 0.2s ease;
+    margin-bottom: 8px;
+  }
+  .alarm-card-item:hover {
+    border-color: rgba(245, 158, 11, 0.4);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  }
+  .alarm-card-item.disabled {
+    opacity: 0.55;
+  }
+  .alarm-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .alarm-card-time {
+    font-size: 22px;
+    font-weight: 700;
+    font-family: var(--font-mono, monospace);
+    color: #fbbf24;
+    letter-spacing: 1px;
+  }
+  .alarm-card-type-pill {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .alarm-card-type-pill.morning {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+    border: 1px solid rgba(245, 158, 11, 0.35);
+  }
+  .alarm-card-type-pill.memo {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+    border: 1px solid rgba(56, 189, 248, 0.35);
+  }
+  .alarm-card-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #e2e8f0;
+  }
+  .alarm-card-content-box {
+    font-size: 11.5px;
+    color: #cbd5e1;
+    line-height: 1.45;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    padding: 6px 10px;
+    border-left: 2px solid #f59e0b;
+  }
+  .alarm-card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .btn-alarm-test {
+    background: rgba(245, 158, 11, 0.15);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    color: #fbbf24;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-alarm-test:hover {
+    background: rgba(245, 158, 11, 0.28);
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+  }
+  .btn-alarm-del {
+    background: transparent;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    color: #f87171;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 11.5px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .btn-alarm-del:hover {
+    background: rgba(239, 68, 68, 0.2);
+  }
+
+  /* 聊天卡片：晨间全息简报与知识库备忘卡片 */
+  .alarm-briefing-row .chat-bubble {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(15, 23, 42, 0.96) 100%) !important;
+    border: 1px solid rgba(245, 158, 11, 0.5) !important;
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+    max-width: 520px;
+  }
+  .briefing-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(245, 158, 11, 0.25);
+    margin-bottom: 10px;
+  }
+  .briefing-card-title {
+    font-weight: 700;
+    font-size: 13.5px;
+    color: #fbbf24;
+  }
+  .briefing-card-time {
+    margin-left: auto;
+    font-size: 10px;
+    color: #94a3b8;
+    font-family: var(--font-mono, monospace);
+  }
+  .briefing-weather-box {
+    background: rgba(56, 189, 248, 0.1);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+  }
+  .briefing-weather-title {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #38bdf8;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .briefing-weather-desc {
+    font-size: 11px;
+    color: #e2e8f0;
+    line-height: 1.45;
+  }
+  .briefing-news-box {
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+  .briefing-news-header {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #cbd5e1;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .briefing-news-item {
+    font-size: 11px;
+    color: #cbd5e1;
+    line-height: 1.45;
+    margin-bottom: 5px;
+    padding-left: 6px;
+    border-left: 2px solid rgba(245, 158, 11, 0.45);
+  }
+  .briefing-news-item strong {
+    color: #f8fafc;
+  }
+  .briefing-memo-box {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px dashed rgba(245, 158, 11, 0.35);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+  }
+  .briefing-memo-title {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #fbbf24;
+    margin-bottom: 4px;
+  }
+  .briefing-memo-content {
+    font-size: 11.5px;
+    color: #fef08a;
+    line-height: 1.45;
+  }
+  .briefing-spoken-text {
+    font-size: 12.5px;
+    color: #f1f5f9;
+    line-height: 1.5;
+    margin-bottom: 8px;
+    white-space: pre-line;
+  }
+
   .vision-lightbox {
     position: fixed;
     inset: 0;
@@ -1424,6 +2348,12 @@
     <div class="nav-title">
       <span>全息伴生舱</span>
     </div>
+    <!-- 电脑本地硬件实时时钟 -->
+    <div class="system-clock-badge" id="system-clock-badge" onclick="toggleAlarmPanel()" style="cursor:pointer;" title="点击打开本地时钟与智能闹钟日程中枢">
+      <span class="clock-date" id="sys-clock-date">--</span>
+      <span class="clock-week" id="sys-clock-week">--</span>
+      <span class="clock-time" id="sys-clock-time">--:--:--</span>
+    </div>
   </div>
 
   <div class="nav-right">
@@ -1436,6 +2366,11 @@
       <span id="gpu-temp" style="color:var(--cyan)">46°C</span>
     </div>
 
+    <button class="btn-header-action btn-memory-nav" id="header-alarm-btn" onclick="toggleAlarmPanel()" title="早晨唤醒晨报与知识库日程备忘">
+      <span class="memory-glow-dot" style="background:#f59e0b;box-shadow:0 0 8px #f59e0b"></span>
+      <span>闹钟日程</span>
+      <span class="memory-badge" id="header-alarm-count">1</span>
+    </button>
     <button class="btn-header-action btn-memory-nav" id="header-mobile-btn" onclick="toggleMobileHub()" title="手机无线扫码遥控与公网穿透">
       <span class="memory-glow-dot" style="background:var(--emerald);box-shadow:0 0 8px var(--emerald)"></span>
       <span>手机互联</span>
@@ -1481,6 +2416,84 @@
       <!-- 灵宠微声波流 -->
       <div class="spectrum-container">
         <canvas id="spectrum-canvas"></canvas>
+      </div>
+    </div>
+
+    <!-- 实时视线监测 · 全息哨兵视窗 -->
+    <div class="sentinel-monitor-box" id="sentinel-monitor-box">
+      <div class="sentinel-topbar">
+        <div class="sentinel-title-grp">
+          <span class="sentinel-status-dot pulse" id="sentinel-dot"></span>
+          <span class="sentinel-label" id="sentinel-label">实时哨兵视线</span>
+        </div>
+        <div class="sentinel-switches-row">
+          <!-- 摄像头开关 -->
+          <div class="sentinel-sw-item" onclick="toggleCameraSwitch()" title="开启或关闭摄像头（关闭时完全释放硬件设备）">
+            <span class="sentinel-sw-name">摄像头</span>
+            <div class="sentinel-mini-pill on" id="sw-sentinel-camera">
+              <div class="sentinel-mini-knob"></div>
+            </div>
+          </div>
+          <!-- 主动迎候 / 自动打招呼开关 -->
+          <div class="sentinel-sw-item" onclick="toggleCooldownSwitch()" title="开启或关闭主动迎候打招呼（开启时识别到人主动迎候说话并执行冷却；关闭后保持静音只看脸不打扰）">
+            <span class="sentinel-sw-name" id="lbl-greeting-sw">迎候</span>
+            <div class="sentinel-mini-pill on" id="sw-sentinel-cooldown">
+              <div class="sentinel-mini-knob"></div>
+            </div>
+          </div>
+          <!-- 时间段警惕模式开关 -->
+          <div class="sentinel-sw-item" onclick="toggleGuardSwitch()" title="开启或关闭时间段警惕模式（时段内识别到陌生人触发警报、持续提醒并抓拍推送到手机）">
+            <span class="sentinel-sw-name" id="lbl-guard-sw">警惕</span>
+            <div class="sentinel-mini-pill" id="sw-sentinel-guard">
+              <div class="sentinel-mini-knob"></div>
+            </div>
+          </div>
+          <!-- 警惕参数设置按钮 -->
+          <button type="button" class="sentinel-gear-btn" onclick="toggleGuardConfigPanel()" title="配置警惕时间段、警报次数与持续时间" style="font-size:10px;padding:1px 4px;border-radius:4px;border:1px solid rgba(148,163,184,0.3);color:#94a3b8;">设置</button>
+        </div>
+      </div>
+
+      <!-- 警惕模式配置抽屉 -->
+      <div class="sentinel-guard-panel" id="sentinel-guard-panel" style="display:none;">
+        <div class="guard-panel-row">
+          <span class="guard-panel-label">警惕时段</span>
+          <div class="guard-time-grp">
+            <input type="time" id="guard-time-start" class="guard-time-input" value="10:00" onchange="saveGuardConfig()">
+            <span class="guard-sep">至</span>
+            <input type="time" id="guard-time-end" class="guard-time-input" value="20:00" onchange="saveGuardConfig()">
+          </div>
+        </div>
+        <div class="guard-panel-row">
+          <div class="guard-sub-row">
+            <span class="guard-panel-label">警报次数</span>
+            <select id="guard-alert-count" class="guard-select" onchange="saveGuardConfig()">
+              <option value="1">1次</option>
+              <option value="2">2次</option>
+              <option value="3" selected>3次 (推荐)</option>
+              <option value="5">5次</option>
+            </select>
+          </div>
+          <div class="guard-sub-row">
+            <span class="guard-panel-label">持续</span>
+            <select id="guard-alert-duration" class="guard-select" onchange="saveGuardConfig()">
+              <option value="3">3秒</option>
+              <option value="5" selected>5秒 (标准)</option>
+              <option value="10">10秒 (长效)</option>
+            </select>
+          </div>
+        </div>
+        <div class="guard-status-indicator" id="guard-status-indicator">
+          <span class="guard-status-dot" id="guard-status-dot"></span>
+          <span id="guard-status-text">警惕未开启</span>
+        </div>
+      </div>
+
+      <div class="sentinel-screen-wrap" id="sentinel-screen-wrap">
+        <img id="sentinel-live-feed" src="/api/face/video_feed" alt="实时哨兵视线" />
+        <div class="sentinel-scanline"></div>
+        <div class="sentinel-chip-badge" id="sentinel-chip-badge">正在守望中...</div>
+        <div class="sentinel-guard-tag" id="sentinel-guard-tag" style="display:none;">警戒中</div>
+        <div class="sentinel-cooldown-tag" id="sentinel-cooldown-tag" style="display:none;">冷却 03:00</div>
       </div>
     </div>
 
@@ -1769,6 +2782,30 @@
       </select>
     </div>
   </div>
+
+  <!-- 人脸面孔中枢 (InsightFace 离线视觉认主与视线对焦) -->
+  <div class="config-section" id="face-vault-section">
+    <div class="config-label">
+      <span>人脸面孔中枢（认主与视线对焦）</span>
+      <span id="face-master-badge" style="font-size:11px;color:var(--text-muted)">未录入主人面孔</span>
+    </div>
+    <div class="config-sub-label" id="face-detail-hint">
+      支持拍照录入主人或上传照片添加熟悉的人。相似度超过 0.60 判定认主；多人群体自动优先锁定主人或近场 C 位最大面孔。
+    </div>
+    <div style="display:flex;gap:8px;margin-top:6px;">
+      <button type="button" class="btn-llm-save" id="btn-face-camera" onclick="enrollMasterFaceCamera()" style="flex:1.2">
+        拍一张设为主人面孔
+      </button>
+      <button type="button" class="btn-llm-test" id="btn-face-upload" onclick="triggerEnrollFaceUpload()" style="flex:1">
+        上传照片添加熟悉的人
+      </button>
+      <input type="file" id="face-upload-input" accept="image/*" style="display:none;" onchange="handleFaceUploadFile(event)">
+    </div>
+    <!-- 已录入人脸卡片列表 -->
+    <div id="face-vault-list" style="margin-top:8px;display:flex;flex-direction:column;gap:6px;">
+      <!-- 动态渲染主人与朋友面孔卡片 -->
+    </div>
+  </div>
 </div>
 
 <!-- 全息视觉大图全屏预览层 -->
@@ -1869,6 +2906,110 @@
     </div>
   </div>
 </div>
+
+<!-- 侧边智能早晨唤醒与知识库日程备忘中枢抽屉 -->
+<div class="settings-panel memory-panel" id="alarm-panel">
+  <div class="panel-header">
+    <div>
+      <h2>智能晨报唤醒与知识库备忘</h2>
+      <div class="panel-sub">本地时钟精确调度 · 叮叮叮晶莹敲钟 · 今日天气/新闻晨报 · 知识库个性化提醒</div>
+    </div>
+    <button class="btn-close" onclick="toggleAlarmPanel()">✕</button>
+  </div>
+
+  <div class="memory-action-bar">
+    <span class="memory-stat-text" id="alarm-stat-text">已配置 0 个闹钟</span>
+    <button class="btn-clear-memories" style="color:#fbbf24;border-color:rgba(245,158,11,0.35)" onclick="loadAlarmsList()">刷新列表</button>
+  </div>
+
+  <div style="overflow-y:auto;flex:1;padding-right:4px;">
+    <!-- 实时时钟看板 -->
+    <div class="alarm-clock-display-card">
+      <div>
+        <div class="alarm-clock-digit" id="panel-clock-digit">--:--:--</div>
+        <div class="alarm-clock-sub" id="panel-clock-sub">电脑本地硬件时间 · 高精度秒级同步</div>
+      </div>
+      <div style="text-align:right;">
+        <span class="alarm-card-type-pill morning" id="panel-next-alarm-pill">晨报闹钟已就绪</span>
+      </div>
+    </div>
+
+    <!-- 添加新闹钟表单 -->
+    <div class="config-section" style="background:rgba(15,23,42,0.6);border:1px solid rgba(245,158,11,0.25);border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div class="config-label" style="color:#fbbf24;margin-bottom:8px;">
+        <span>+ 新增闹钟 / 日程备忘</span>
+      </div>
+
+      <!-- 类型选择 -->
+      <div class="alarm-type-tabs">
+        <button type="button" class="alarm-type-tab active" id="tab-alarm-morning" onclick="selectAlarmFormType('morning')">早晨唤醒晨报 (天气+新闻+备忘)</button>
+        <button type="button" class="alarm-type-tab" id="tab-alarm-memo" onclick="selectAlarmFormType('memo')">知识库日程备忘 (智能个性化播报)</button>
+      </div>
+
+      <div style="display:flex;gap:10px;margin-bottom:8px;">
+        <div style="flex:1;">
+          <div class="config-sub-label">响铃时间 (HH:MM)</div>
+          <input type="time" class="config-input" id="alarm-form-time" value="06:00" style="font-family:var(--font-mono, monospace);font-size:16px;font-weight:600;padding:6px 10px;">
+        </div>
+        <div style="flex:1.6;">
+          <div class="config-sub-label">闹钟名称 / 标签</div>
+          <input type="text" class="config-input" id="alarm-form-label" value="早晨起床唤醒与晨报" placeholder="例如：早晨起床 / 项目周会" style="padding:6px 10px;">
+        </div>
+      </div>
+
+      <!-- 知识库内容输入框 (核心要求) -->
+      <div style="margin-bottom:8px;">
+        <div class="config-sub-label" id="alarm-content-hint" style="color:#fde68a;">
+          提醒大概内容的知识库内容（萌宠提醒时将基于此内容进行口语化播报）：
+        </div>
+        <textarea class="config-input" id="alarm-form-content" rows="3" placeholder="输入提醒大概内容的知识库内容（如：早起喝一杯温开水，整理今日日程，出门前检查工卡和钥匙；或：下午三点和张经理开会讨论项目进度，重点汇报性能提升40%）" style="resize:vertical;font-size:12px;line-height:1.5;"></textarea>
+      </div>
+
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:11.5px;color:var(--text-muted);">重复周期：</span>
+          <select class="config-select" id="alarm-form-repeat" style="padding:4px 8px;font-size:11.5px;width:auto;">
+            <option value="daily">每天重复</option>
+            <option value="once">仅响一次</option>
+          </select>
+        </div>
+        <button type="button" class="btn-llm-save" onclick="saveNewAlarm()" style="padding:6px 16px;background:linear-gradient(135deg,#f59e0b,#d97706);border:none;box-shadow:0 0 12px rgba(245,158,11,0.4);">
+          保存闹钟
+        </button>
+      </div>
+    </div>
+
+    <!-- 已配置闹钟列表 -->
+    <div class="config-label" style="margin-bottom:8px;">
+      <span>已设定闹钟列表</span>
+      <span style="font-size:11px;color:var(--text-muted);">响铃后手动停止或5分钟后自动停止并播报</span>
+    </div>
+    <div id="alarm-cards-container">
+      <!-- 动态填充闹钟卡片 -->
+    </div>
+  </div>
+</div>
+
+<!-- 全屏高能响铃视窗 (持续发出晶莹叮叮叮敲钟铃声，直到手动点击或5分钟超时) -->
+<div class="alarm-ringing-overlay" id="alarm-ringing-modal">
+  <div class="alarm-ringing-card">
+    <div class="alarm-ring-title" id="ring-alarm-title">早晨唤醒闹钟正在响铃</div>
+    <div class="alarm-ring-label" id="ring-alarm-label">早晨起床唤醒与晨报</div>
+    <div class="alarm-ring-memo-preview" id="ring-alarm-memo-preview" style="display:none;"></div>
+    
+    <div class="alarm-ring-timer-box">
+      <div class="alarm-ring-countdown" id="ring-countdown-display">05:00</div>
+      <div class="alarm-ring-timer-hint">清脆叮叮叮铜钟铃声播放中 · 满 5 分钟将自动停止并开启播报</div>
+    </div>
+
+    <button type="button" class="btn-stop-ringing-action" onclick="stopActiveAlarm()">
+      <span>停止闹钟并听取播报</span>
+    </button>
+  </div>
+</div>
+
+<!-- 浏览器端叮叮叮铃声音频容器 -->
+<audio id="alarm-chime-audio" loop preload="auto" style="display:none;"></audio>
 
 <script>
 // ========================================================
@@ -3640,16 +4781,453 @@ setInterval(pollHardware, 2500);
 pollHardware();
 
 let mobileHubPollTimer = null;
+let currentAlarmFormType = 'morning';
+let alarmsData = [];
+let ringingTimerInterval = null;
+let currentRingingAlarm = null;
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
 
 function closeAllPanels() {
   document.getElementById('settings-panel').classList.remove('open');
   document.getElementById('memory-panel').classList.remove('open');
   const mob = document.getElementById('mobile-panel');
   if (mob) mob.classList.remove('open');
+  const al = document.getElementById('alarm-panel');
+  if (al) al.classList.remove('open');
   document.getElementById('modal-mask').classList.remove('open');
   if (mobileHubPollTimer) {
     clearInterval(mobileHubPollTimer);
     mobileHubPollTimer = null;
+  }
+}
+
+function toggleAlarmPanel() {
+  const p = document.getElementById('settings-panel');
+  const m = document.getElementById('memory-panel');
+  const mob = document.getElementById('mobile-panel');
+  const al = document.getElementById('alarm-panel');
+  if (p) p.classList.remove('open');
+  if (m) m.classList.remove('open');
+  if (mob) mob.classList.remove('open');
+  if (mobileHubPollTimer) {
+    clearInterval(mobileHubPollTimer);
+    mobileHubPollTimer = null;
+  }
+  const willOpen = !al.classList.contains('open');
+  al.classList.toggle('open');
+  if (willOpen) {
+    document.getElementById('modal-mask').classList.add('open');
+    loadAlarmsList();
+  } else {
+    document.getElementById('modal-mask').classList.remove('open');
+  }
+}
+
+function selectAlarmFormType(type) {
+  currentAlarmFormType = type;
+  const tabM = document.getElementById('tab-alarm-morning');
+  const tabC = document.getElementById('tab-alarm-memo');
+  const timeInput = document.getElementById('alarm-form-time');
+  const labelInput = document.getElementById('alarm-form-label');
+  const hintEl = document.getElementById('alarm-content-hint');
+  const contentInput = document.getElementById('alarm-form-content');
+
+  if (type === 'morning') {
+    if (tabM) tabM.classList.add('active');
+    if (tabC) tabC.classList.remove('active');
+    if (labelInput && (!labelInput.value || labelInput.value === '重要日程知识库备忘')) {
+      labelInput.value = '早晨起床唤醒与晨报';
+    }
+    if (timeInput && timeInput.value === '14:30') timeInput.value = '06:00';
+    if (hintEl) hintEl.textContent = '早晨提醒备忘（闹钟关停后将自动播报今日天气与新闻，并带上此处备忘）：';
+    if (contentInput && !contentInput.value.trim()) {
+      contentInput.placeholder = '输入提醒大概内容的知识库内容（如：早起喝一杯温开水，整理今日日程，出门前检查工卡和钥匙）';
+    }
+  } else {
+    if (tabM) tabM.classList.remove('active');
+    if (tabC) tabC.classList.add('active');
+    if (labelInput && (!labelInput.value || labelInput.value === '早晨起床唤醒与晨报')) {
+      labelInput.value = '重要日程知识库备忘';
+    }
+    if (timeInput && timeInput.value === '06:00') timeInput.value = '14:30';
+    if (hintEl) hintEl.textContent = '知识库日程备忘内容（闹钟关停后萌宠将基于此内容进行口语化个性提醒）：';
+    if (contentInput && !contentInput.value.trim()) {
+      contentInput.placeholder = '输入提醒大概内容的知识库内容（如：下午三点和张经理开会讨论项目进度，重点汇报性能提升40%与后续落地计划）';
+    }
+  }
+}
+
+async function loadAlarmsList() {
+  try {
+    const res = await fetch('/api/alarms');
+    const data = await res.json();
+    if (!data.success) return;
+    alarmsData = data.alarms || [];
+    const activeCount = alarmsData.filter(a => a.enabled).length;
+
+    // 更新导航徽章
+    const bCount = document.getElementById('header-alarm-count');
+    if (bCount) bCount.textContent = activeCount;
+
+    const statText = document.getElementById('alarm-stat-text');
+    if (statText) statText.textContent = `共 ${alarmsData.length} 个闹钟 · ${activeCount} 个已启用`;
+
+    // 渲染闹钟卡片列表
+    const container = document.getElementById('alarm-cards-container');
+    if (!container) return;
+
+    if (alarmsData.length === 0) {
+      container.innerHTML = `
+        <div style="text-align:center;padding:24px 10px;color:var(--text-muted);font-size:12px;">
+          暂无已配置闹钟，请在上方输入时间与提醒知识库内容并保存
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = alarmsData.map(a => {
+      const isMorning = a.type === 'morning';
+      const typeLabel = isMorning ? '早晨唤醒晨报' : '知识库备忘';
+      const pillClass = isMorning ? 'morning' : 'memo';
+      const repeatLabel = a.repeat === 'once' ? '仅响一次' : '每天重复';
+      const contentSnippet = a.content ? escapeHtml(a.content) : '无详细知识库备忘';
+
+      return `
+        <div class="alarm-card-item ${a.enabled ? '' : 'disabled'}" id="card-${a.id}">
+          <div class="alarm-card-top">
+            <span class="alarm-card-time">${escapeHtml(a.time)}</span>
+            <span class="alarm-card-type-pill ${pillClass}">${typeLabel}</span>
+          </div>
+          <div class="alarm-card-label">${escapeHtml(a.label || '闹钟提醒')} · <span style="font-size:11px;color:var(--text-muted);">${repeatLabel}</span></div>
+          <div class="alarm-card-content-box">
+            <div style="font-size:10.5px;color:#fde68a;font-weight:600;margin-bottom:2px;">知识库播报内容：</div>
+            ${contentSnippet}
+          </div>
+          <div class="alarm-card-actions">
+            <div style="display:flex;align-items:center;gap:8px;">
+              <button type="button" class="btn-alarm-test" onclick="testTriggerAlarm('${a.id}')" title="立即测试此闹钟的清脆叮叮叮响铃与停钟后智能播报">
+                测试响铃
+              </button>
+              <button type="button" class="btn-alarm-del" onclick="deleteAlarm('${a.id}')" title="删除此闹钟">
+                删除
+              </button>
+            </div>
+            <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:${a.enabled ? '#38bdf8' : 'var(--text-muted)'};">
+              <input type="checkbox" ${a.enabled ? 'checked' : ''} onchange="toggleAlarmEnabled('${a.id}', this.checked)" style="cursor:pointer;accent-color:#f59e0b;">
+              <span>${a.enabled ? '已开启' : '已关闭'}</span>
+            </label>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // 若当前正在响铃，同步响铃状态
+    if (data.status && data.status.ringing && data.status.ringing_alarm) {
+      if (!currentRingingAlarm) {
+        handleAlarmRingingStarted({
+          alarm: data.status.ringing_alarm,
+          max_duration_s: data.status.ringing_remaining_s || 300
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Failed to load alarms:', err);
+  }
+}
+
+async function saveNewAlarm() {
+  const timeInput = document.getElementById('alarm-form-time');
+  const labelInput = document.getElementById('alarm-form-label');
+  const contentInput = document.getElementById('alarm-form-content');
+  const repeatSelect = document.getElementById('alarm-form-repeat');
+
+  const timeVal = (timeInput ? timeInput.value : '').trim();
+  const labelVal = (labelInput ? labelInput.value : '').trim();
+  const contentVal = (contentInput ? contentInput.value : '').trim();
+  const repeatVal = repeatSelect ? repeatSelect.value : 'daily';
+
+  if (!timeVal) {
+    alert('请选择闹钟响铃时间');
+    return;
+  }
+
+  try {
+    const res = await fetch('/api/alarms', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        time: timeVal,
+        label: labelVal || (currentAlarmFormType === 'morning' ? '早晨起床唤醒与晨报' : '日程知识库备忘'),
+        type: currentAlarmFormType,
+        content: contentVal,
+        repeat: repeatVal,
+        enabled: true
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      loadAlarmsList();
+      alert(`闹钟添加成功！将于每天 ${timeVal} 准时响起清脆叮叮叮铃声，关停后为您播报${currentAlarmFormType === 'morning' ? '今日天气与新闻' : '知识库备忘'}`);
+    } else {
+      alert('添加失败: ' + (data.error || '未知错误'));
+    }
+  } catch (err) {
+    alert('请求失败: ' + err);
+  }
+}
+
+async function toggleAlarmEnabled(alarmId, enabled) {
+  try {
+    await fetch('/api/alarms/toggle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: alarmId, enabled })
+    });
+    loadAlarmsList();
+  } catch (err) {
+    console.error('Failed to toggle alarm:', err);
+  }
+}
+
+async function deleteAlarm(alarmId) {
+  if (!confirm('确定要删除该闹钟吗？')) return;
+  try {
+    await fetch(`/api/alarms/${encodeURIComponent(alarmId)}`, { method: 'DELETE' });
+    loadAlarmsList();
+  } catch (err) {
+    console.error('Failed to delete alarm:', err);
+  }
+}
+
+async function testTriggerAlarm(alarmId) {
+  try {
+    const res = await fetch(`/api/alarms/test/${encodeURIComponent(alarmId)}`, { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      console.log('Test alarm triggered successfully');
+    } else {
+      alert('测试失败: ' + (data.error || '未知错误'));
+    }
+  } catch (err) {
+    alert('测试请求失败: ' + err);
+  }
+}
+
+function handleAlarmRingingStarted(data) {
+  if (!data || !data.alarm) return;
+  currentRingingAlarm = data.alarm;
+  closeAllPanels();
+
+  const modal = document.getElementById('alarm-ringing-modal');
+  if (modal) {
+    modal.classList.add('active');
+    const titleEl = document.getElementById('ring-alarm-title');
+    const labelEl = document.getElementById('ring-alarm-label');
+    const memoBox = document.getElementById('ring-alarm-memo-preview');
+
+    if (data.alarm.type === 'morning') {
+      if (titleEl) titleEl.textContent = '早晨唤醒闹钟正在响铃';
+    } else {
+      if (titleEl) titleEl.textContent = '知识库日程备忘正在响铃';
+    }
+    if (labelEl) labelEl.textContent = data.alarm.label || '闹钟提醒';
+    if (memoBox) {
+      if (data.alarm.content && data.alarm.content.trim()) {
+        memoBox.style.display = 'block';
+        memoBox.textContent = '知识库内容备忘：' + data.alarm.content;
+      } else {
+        memoBox.style.display = 'none';
+      }
+    }
+  }
+
+  // 播放高保真晶莹叮叮叮铜钟铃声（本地物理扬声器已由系统直接播放，网页端不重叠启动）
+  if (data.chime_wav_b64) {
+    const audioEl = document.getElementById('alarm-chime-audio');
+    if (audioEl) {
+      audioEl.src = 'data:audio/wav;base64,' + data.chime_wav_b64;
+    }
+  }
+
+  // 启动 5 分钟（300秒）精准递减倒计时
+  startRingingCountdown(data.max_duration_s || 300);
+}
+
+function startRingingCountdown(durationSeconds) {
+  if (ringingTimerInterval) {
+    clearInterval(ringingTimerInterval);
+    ringingTimerInterval = null;
+  }
+  let remaining = Math.max(1, Math.round(durationSeconds));
+  const display = document.getElementById('ring-countdown-display');
+
+  const updateDisplay = () => {
+    const m = Math.floor(remaining / 60);
+    const s = remaining % 60;
+    if (display) {
+      display.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+  };
+  updateDisplay();
+
+  ringingTimerInterval = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(ringingTimerInterval);
+      ringingTimerInterval = null;
+      stopActiveAlarm('timeout');
+    } else {
+      updateDisplay();
+    }
+  }, 1000);
+}
+
+async function stopActiveAlarm(reason = 'manual') {
+  closeAllPanels();
+  // 立即停止本地铃声音频
+  const audioEl = document.getElementById('alarm-chime-audio');
+  if (audioEl) {
+    audioEl.pause();
+    audioEl.currentTime = 0;
+  }
+  const modal = document.getElementById('alarm-ringing-modal');
+  if (modal) modal.classList.remove('active');
+  if (ringingTimerInterval) {
+    clearInterval(ringingTimerInterval);
+    ringingTimerInterval = null;
+  }
+  currentRingingAlarm = null;
+
+  try {
+    await fetch('/api/alarms/stop', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason })
+    });
+  } catch (err) {
+    console.error('Failed to call stop alarm API:', err);
+  }
+}
+
+function handleAlarmRingingStopped(data) {
+  const audioEl = document.getElementById('alarm-chime-audio');
+  if (audioEl) {
+    audioEl.pause();
+    audioEl.currentTime = 0;
+  }
+  const modal = document.getElementById('alarm-ringing-modal');
+  if (modal) modal.classList.remove('active');
+  if (ringingTimerInterval) {
+    clearInterval(ringingTimerInterval);
+    ringingTimerInterval = null;
+  }
+  currentRingingAlarm = null;
+}
+
+function handleAlarmBriefingEvent(data) {
+  if (!data || !data.turn_id) return;
+  if (lastRenderedGreetingIds.has(data.turn_id)) return;
+  lastRenderedGreetingIds.add(data.turn_id);
+
+  // 确保响铃界面已关闭
+  handleAlarmRingingStopped();
+
+  const scrollBox = document.getElementById('chat-scroll');
+  if (!scrollBox) return;
+
+  const aRow = document.createElement('div');
+  aRow.className = 'chat-row assistant alarm-briefing-row';
+
+  let weatherHtml = '';
+  if (data.weather && data.weather.success) {
+    const w = data.weather;
+    weatherHtml = `
+      <div class="briefing-weather-box">
+        <div class="briefing-weather-title">
+          <span>${escapeHtml(w.city || '福州')} 实时气象感知</span>
+          <span style="font-weight:normal;font-size:10.5px;color:var(--text-muted);margin-left:auto;">${escapeHtml(w.weather || '')} ${w.temp_now}°C (${w.temp_min}°C ~ ${w.temp_max}°C)</span>
+        </div>
+        <div class="briefing-weather-desc">${escapeHtml(w.context_text || '')}</div>
+      </div>
+    `;
+  }
+
+  let newsHtml = '';
+  if (data.news && Array.isArray(data.news) && data.news.length > 0) {
+    let itemsHtml = '';
+    data.news.forEach((it, idx) => {
+      itemsHtml += `
+        <div class="briefing-news-item">
+          <strong>${idx + 1}. ${escapeHtml(it.title || '')}</strong>
+          ${it.desc ? `<div style="font-size:10.5px;color:#94a3b8;margin-top:2px;">${escapeHtml(it.desc)}</div>` : ''}
+        </div>
+      `;
+    });
+    newsHtml = `
+      <div class="briefing-news-box">
+        <div class="briefing-news-header">
+          <span>今日实时热点新闻</span>
+          <span style="font-size:10.5px;color:var(--text-muted);margin-left:auto;">全网热榜实时聚合</span>
+        </div>
+        ${itemsHtml}
+      </div>
+    `;
+  }
+
+  let memoHtml = '';
+  if (data.memo_content && data.memo_content.trim()) {
+    memoHtml = `
+      <div class="briefing-memo-box">
+        <div class="briefing-memo-title">专属知识库日程备忘</div>
+        <div class="briefing-memo-content">${escapeHtml(data.memo_content)}</div>
+      </div>
+    `;
+  }
+
+  let audioHtml = '';
+  if (data.wav_b64) {
+    audioHtml = `
+      <div class="audio-player-wrap" style="margin-top:8px;">
+        <audio controls preload="none" src="data:audio/wav;base64,${data.wav_b64}" style="height:32px;width:100%;max-width:320px;"></audio>
+      </div>
+    `;
+  }
+
+  aRow.innerHTML = `
+    <div class="chat-bubble">
+      <div class="briefing-card-header">
+        <span class="briefing-card-title">${escapeHtml(data.card_title || '晨报日程')}</span>
+        <span class="briefing-card-time">${escapeHtml(data.time_str || '')}</span>
+      </div>
+      ${weatherHtml}
+      ${newsHtml}
+      ${memoHtml}
+      <div class="briefing-spoken-text">${escapeHtml(data.assistant_text || '')}</div>
+      ${audioHtml}
+    </div>
+  `;
+
+  scrollBox.appendChild(aRow);
+  scrollBox.scrollTop = scrollBox.scrollHeight;
+
+  // 灵宠动作联动
+  const pIdx = PET_ID_TO_INDEX[data.pet_id] !== undefined ? PET_ID_TO_INDEX[data.pet_id] : activePetIndex;
+  if (pIdx !== activePetIndex) switchPet(pIdx);
+  if (pets[activePetIndex]) {
+    pets[activePetIndex].expression = 'happy';
+    pets[activePetIndex].state = 'speaking';
+    setTimeout(() => {
+      if (pets[activePetIndex]) pets[activePetIndex].state = 'docked';
+    }, 8000);
   }
 }
 
@@ -3666,6 +5244,7 @@ function toggleSettings() {
   const isOpen = p.classList.toggle('open');
   if (isOpen) {
     document.getElementById('modal-mask').classList.add('open');
+    loadFaceVault();
   } else {
     document.getElementById('modal-mask').classList.remove('open');
   }
@@ -4103,8 +5682,35 @@ function closeVisionLightbox() {
             card.className = 'vision-image-card';
             const modeLabel = data.mode === 'camera' ? '电脑摄像头实景抓拍' : '当前电脑页面实时截图';
             const fileName = data.mode === 'camera' ? `摄像头实拍_${Date.now()}.jpg` : `页面截图_${Date.now()}.jpg`;
+
+            let faceOverlayHtml = '';
+            const fa = data.face_analysis;
+            if (data.mode === 'camera' && fa && fa.faces_count > 0 && fa.locked_target) {
+              const lt = fa.locked_target;
+              const bp = lt.bbox_pct;
+              const edgeBadgeHtml = `
+                <div class="face-edge-badge">
+                  <span class="face-badge-dot"></span>
+                  <span class="face-badge-text">${lt.display_badge}</span>
+                </div>
+              `;
+              const reticleHtml = `
+                <div class="face-reticle-cyan" style="left:${bp.left}%;top:${bp.top}%;width:${bp.width}%;height:${bp.height}%;"></div>
+              `;
+              let hudHtml = '';
+              if (fa.faces_count > 1 && fa.targets) {
+                hudHtml = `<div class="face-targets-hud">` + fa.targets.map(t => `
+                  <button type="button" class="target-hud-pill ${t.is_locked ? 'active' : ''}" onclick="switchFaceTargetInCard(this, ${t.target_index})">${t.target_title}${t.is_locked ? ' (锁定)' : ''}</button>
+                `).join('') + `</div>`;
+              }
+              faceOverlayHtml = edgeBadgeHtml + reticleHtml + hudHtml;
+            }
+
             card.innerHTML = `
-              <img src="${data.image_data_uri}" alt="${modeLabel}" title="点击全屏放大查看">
+              <div class="vision-img-wrap">
+                <img src="${data.image_data_uri}" alt="${modeLabel}" title="点击全屏放大查看">
+                ${faceOverlayHtml}
+              </div>
               <div class="vision-image-footer">
                 <span>${modeLabel} · 点击图片可全屏放大</span>
                 <a class="vision-dl-link" href="${data.image_data_uri}" download="${fileName}">保存原图</a>
@@ -4462,6 +6068,48 @@ function connectPcMobileSync() {
           }
           submitMessage(data.message, true);
         }
+      } else if (data.type === 'face_vault_updated') {
+        loadFaceVault();
+      } else if (data.type === 'face_target_switched') {
+        // 全局同步更新当前最新视线卡片
+        const cards = document.querySelectorAll('.vision-image-card');
+        if (cards.length > 0 && data.face_analysis && data.face_analysis.locked_target) {
+          const card = cards[cards.length - 1];
+          const lt = data.face_analysis.locked_target;
+          const bp = lt.bbox_pct;
+          const reticle = card.querySelector('.face-reticle-cyan');
+          if (reticle) {
+            reticle.style.left = `${bp.left}%`;
+            reticle.style.top = `${bp.top}%`;
+            reticle.style.width = `${bp.width}%`;
+            reticle.style.height = `${bp.height}%`;
+          }
+          const badge = card.querySelector('.face-badge-text');
+          if (badge) badge.textContent = lt.display_badge;
+          const pills = card.querySelectorAll('.target-hud-pill');
+          pills.forEach((p, idx) => {
+            p.classList.toggle('active', idx === lt.target_index);
+            p.textContent = idx === lt.target_index ? `目标 ${idx + 1} (锁定)` : `目标 ${idx + 1}`;
+          });
+        }
+      } else if (data.type === 'chat_sentinel_greeting') {
+        handleSentinelGreetingEvent(data);
+      } else if (data.type === 'sentinel_guard_alert') {
+        handleGuardAlertEvent(data);
+      } else if (data.type === 'sentinel_guard_config_changed') {
+        if (data.guard_config) updateGuardUi(data.guard_config);
+      } else if (data.type === 'sentinel_state_changed') {
+        updateSentinelCameraUi(data.enabled);
+      } else if (data.type === 'sentinel_cooldown_changed' || data.type === 'sentinel_greeting_changed') {
+        updateSentinelCooldownUi(data.greeting_enabled !== undefined ? data.greeting_enabled : data.cooldown_enabled);
+      } else if (data.type === 'alarm_ringing_started') {
+        handleAlarmRingingStarted(data);
+      } else if (data.type === 'alarm_ringing_stopped') {
+        handleAlarmRingingStopped(data);
+      } else if (data.type === 'chat_alarm_briefing') {
+        handleAlarmBriefingEvent(data);
+      } else if (data.type === 'alarms_updated') {
+        loadAlarmsList();
       }
     } catch (e) {}
   };
@@ -5001,13 +6649,689 @@ async function toggleAutoVad() {
   }
 }
 
+// =========================================================================
+// 人脸面孔中枢 (InsightFace 离线人脸识别、录入与对焦目标切换)
+// =========================================================================
+async function switchFaceTargetInCard(btn, targetIndex) {
+  try {
+    const card = btn.closest('.vision-image-card');
+    const res = await fetch('/api/face/switch_target', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ target_index: targetIndex })
+    });
+    const d = await res.json();
+    if (d && d.face_analysis && d.face_analysis.locked_target) {
+      const lt = d.face_analysis.locked_target;
+      const bp = lt.bbox_pct;
+      const reticle = card.querySelector('.face-reticle-cyan');
+      if (reticle) {
+        reticle.style.left = `${bp.left}%`;
+        reticle.style.top = `${bp.top}%`;
+        reticle.style.width = `${bp.width}%`;
+        reticle.style.height = `${bp.height}%`;
+      }
+      const badge = card.querySelector('.face-badge-text');
+      if (badge) badge.textContent = lt.display_badge;
+
+      const pills = card.querySelectorAll('.target-hud-pill');
+      pills.forEach((p, idx) => {
+        p.classList.toggle('active', idx === lt.target_index);
+        p.textContent = idx === lt.target_index ? `目标 ${idx + 1} (锁定)` : `目标 ${idx + 1}`;
+      });
+    }
+  } catch (e) {
+    console.warn('Switch face target error:', e);
+  }
+}
+
+async function loadFaceVault() {
+  try {
+    const res = await fetch('/api/face/info');
+    const data = await res.json();
+    if (!data.success) return;
+
+    const badge = document.getElementById('face-master-badge');
+    if (badge) {
+      if (data.has_master && data.master) {
+        badge.textContent = `已录入主人面孔 (${data.master.created_at || '就绪'})`;
+        badge.style.color = 'var(--cyan)';
+      } else {
+        badge.textContent = '未录入主人面孔';
+        badge.style.color = 'var(--text-muted)';
+      }
+    }
+
+    const list = document.getElementById('face-vault-list');
+    if (!list) return;
+
+    let itemsHtml = '';
+    if (data.master) {
+      const m = data.master;
+      const thumbHtml = m.thumbnail
+        ? `<img class="face-item-thumb" src="${m.thumbnail}" alt="主人">`
+        : `<div class="face-item-thumb empty">主</div>`;
+      itemsHtml += `
+        <div class="face-item-card" style="border-color:rgba(0,240,255,0.25);background:rgba(0,240,255,0.05);">
+          <div class="face-item-info">
+            ${thumbHtml}
+            <div>
+              <div class="face-item-name" style="color:var(--cyan);">主人面孔 (最高优先级匹配)</div>
+              <div class="face-item-date">${m.created_at || '已就绪'} · 阈值 ${data.threshold}</div>
+            </div>
+          </div>
+          <button type="button" class="face-del-btn" onclick="deleteFaceRecord('${m.id}')">清空</button>
+        </div>
+      `;
+    }
+
+    if (data.friends && data.friends.length > 0) {
+      data.friends.forEach(f => {
+        const thumbHtml = f.thumbnail
+          ? `<img class="face-item-thumb" src="${f.thumbnail}" alt="${f.name}">`
+          : `<div class="face-item-thumb empty">友</div>`;
+        itemsHtml += `
+          <div class="face-item-card">
+            <div class="face-item-info">
+              ${thumbHtml}
+              <div>
+                <div class="face-item-name">${f.name}</div>
+                <div class="face-item-date">${f.created_at || '已就绪'}</div>
+              </div>
+            </div>
+            <button type="button" class="face-del-btn" onclick="deleteFaceRecord('${f.id}')">删除</button>
+          </div>
+        `;
+      });
+    }
+
+    if (!itemsHtml) {
+      itemsHtml = `<div style="font-size:11px;color:var(--text-muted);text-align:center;padding:8px 0;">暂未录入任何人脸，点击上方按钮拍照或上传即可录入</div>`;
+    }
+    list.innerHTML = itemsHtml;
+  } catch (e) {
+    console.warn('Failed to load face vault:', e);
+  }
+}
+
+async function enrollMasterFaceCamera() {
+  const btn = document.getElementById('btn-face-camera');
+  const origText = btn ? btn.textContent : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '正在拍照并提取特征...';
+  }
+  setAsrStatus(true, '正在调用电脑摄像头抓拍并提取主人人脸特征...');
+  try {
+    const res = await fetch('/api/face/enroll_camera', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: '主人', is_master: true })
+    });
+    const d = await res.json();
+    if (d.success) {
+      setAsrStatus(true, d.message || '已成功录入主人面孔！');
+      setTimeout(() => setAsrStatus(false, ''), 2500);
+      loadFaceVault();
+    } else {
+      setAsrStatus(true, d.error || '录入失败，请确保面部正对镜头', true);
+      setTimeout(() => setAsrStatus(false, ''), 3000);
+    }
+  } catch (err) {
+    setAsrStatus(true, '网络错误，无法调用摄像头', true);
+    setTimeout(() => setAsrStatus(false, ''), 2500);
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = origText;
+    }
+  }
+}
+
+function triggerEnrollFaceUpload() {
+  const input = document.getElementById('face-upload-input');
+  if (input) {
+    input.value = '';
+    input.click();
+  }
+}
+
+async function handleFaceUploadFile(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const personName = prompt('请输入要录入的姓名或称谓（如：小李、妈妈）：', '熟悉朋友');
+  if (!personName || !personName.trim()) return;
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64Data = e.target.result;
+    setAsrStatus(true, `正在分析照片并提取【${personName.trim()}】人脸特征...`);
+    try {
+      const res = await fetch('/api/face/enroll_upload', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: personName.trim(),
+          is_master: false,
+          image_data_uri: base64Data
+        })
+      });
+      const d = await res.json();
+      if (d.success) {
+        setAsrStatus(true, d.message || `已成功录入【${personName.trim()}】面孔！`);
+        setTimeout(() => setAsrStatus(false, ''), 2500);
+        loadFaceVault();
+      } else {
+        setAsrStatus(true, d.error || '照片未检测到清晰人脸', true);
+        setTimeout(() => setAsrStatus(false, ''), 3000);
+      }
+    } catch (err) {
+      setAsrStatus(true, '上传人脸识别出错', true);
+      setTimeout(() => setAsrStatus(false, ''), 2500);
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+async function deleteFaceRecord(faceId) {
+  if (!confirm('确定要删除此人脸记录吗？')) return;
+  try {
+    const res = await fetch('/api/face/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ face_id: faceId })
+    });
+    const d = await res.json();
+    if (d.success) {
+      loadFaceVault();
+    } else {
+      alert(d.error || '删除失败');
+    }
+  } catch (e) {
+    alert('网络错误');
+  }
+}
+
+// ========================================================
+// 实时视线哨兵前端响应交互与轮询中枢
+// ========================================================
+let sentinelCooldownRemaining = 0;
+let sentinelCameraEnabled = true;
+let sentinelCooldownEnabled = true;
+let sentinelGuardEnabled = false;
+let sentinelIsInGuardPeriod = false;
+let sentinelGuardAlerting = false;
+let sentinelGuardConfig = { enabled: false, start_time: "10:00", end_time: "20:00", alert_count: 3, alert_duration_s: 5 };
+const lastRenderedGreetingIds = new Set();
+
+function toggleGuardConfigPanel() {
+  const panel = document.getElementById('sentinel-guard-panel');
+  if (!panel) return;
+  panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
+}
+
+async function loadGuardConfig() {
+  try {
+    const res = await fetch('/api/face/sentinel/guard_config');
+    const d = await res.json();
+    if (d) updateGuardUi(d);
+  } catch (e) {
+    console.warn('Failed to load guard config:', e);
+  }
+}
+
+async function saveGuardConfig() {
+  const st = document.getElementById('guard-time-start');
+  const et = document.getElementById('guard-time-end');
+  const cnt = document.getElementById('guard-alert-count');
+  const dur = document.getElementById('guard-alert-duration');
+  try {
+    const res = await fetch('/api/face/sentinel/guard_config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        start_time: st ? st.value : "10:00",
+        end_time: et ? et.value : "20:00",
+        alert_count: cnt ? parseInt(cnt.value) : 3,
+        alert_duration_s: dur ? parseInt(dur.value) : 5,
+      })
+    });
+    const d = await res.json();
+    if (d) updateGuardUi(d);
+  } catch (e) {
+    console.warn('Failed to save guard config:', e);
+  }
+}
+
+async function toggleGuardSwitch() {
+  const pill = document.getElementById('sw-sentinel-guard');
+  const targetState = pill ? !pill.classList.contains('guard-on') : null;
+  try {
+    const res = await fetch('/api/face/sentinel/guard_toggle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(targetState !== null ? { enabled: targetState } : {})
+    });
+    const d = await res.json();
+    if (d) updateGuardUi(d);
+  } catch (e) {
+    console.warn('Failed to toggle guard switch:', e);
+  }
+}
+
+function updateGuardUi(cfg) {
+  if (!cfg) return;
+  sentinelGuardConfig = cfg;
+  sentinelGuardEnabled = !!cfg.enabled;
+  sentinelIsInGuardPeriod = !!cfg.is_in_guard_period;
+
+  const pill = document.getElementById('sw-sentinel-guard');
+  if (pill) {
+    pill.classList.toggle('guard-on', sentinelGuardEnabled);
+  }
+
+  const st = document.getElementById('guard-time-start');
+  const et = document.getElementById('guard-time-end');
+  const cnt = document.getElementById('guard-alert-count');
+  const dur = document.getElementById('guard-alert-duration');
+  if (st && cfg.start_time) st.value = cfg.start_time;
+  if (et && cfg.end_time) et.value = cfg.end_time;
+  if (cnt && cfg.alert_count) cnt.value = String(cfg.alert_count);
+  if (dur && cfg.alert_duration_s) dur.value = String(cfg.alert_duration_s);
+
+  const dot = document.getElementById('guard-status-dot');
+  const txt = document.getElementById('guard-status-text');
+  const tag = document.getElementById('sentinel-guard-tag');
+  const wrap = document.getElementById('sentinel-screen-wrap');
+
+  if (sentinelGuardEnabled) {
+    if (sentinelIsInGuardPeriod) {
+      if (dot) { dot.className = 'guard-status-dot active'; }
+      if (txt) { txt.textContent = `警戒守望中 (${cfg.start_time}~${cfg.end_time})`; txt.style.color = '#f87171'; }
+      if (tag) {
+        tag.style.display = 'flex';
+        if (sentinelGuardAlerting) {
+          tag.className = 'sentinel-guard-tag alerting';
+          tag.innerHTML = '陌生人闯入警报';
+        } else {
+          tag.className = 'sentinel-guard-tag';
+          tag.innerHTML = `警戒中 (${cfg.start_time}-${cfg.end_time})`;
+        }
+      }
+      if (wrap) {
+        wrap.classList.add('guard-active');
+        wrap.classList.toggle('guard-alerting', sentinelGuardAlerting);
+      }
+    } else {
+      if (dot) { dot.className = 'guard-status-dot idle'; }
+      if (txt) { txt.textContent = `非警戒时段 (${cfg.start_time}~${cfg.end_time})`; txt.style.color = '#38bdf8'; }
+      if (tag) tag.style.display = 'none';
+      if (wrap) {
+        wrap.classList.remove('guard-active', 'guard-alerting');
+      }
+    }
+  } else {
+    if (dot) { dot.className = 'guard-status-dot'; }
+    if (txt) { txt.textContent = '警惕未开启'; txt.style.color = '#94a3b8'; }
+    if (tag) tag.style.display = 'none';
+    if (wrap) {
+      wrap.classList.remove('guard-active', 'guard-alerting');
+    }
+  }
+}
+
+function handleGuardAlertEvent(data) {
+  if (!data || !data.turn_id) return;
+  if (lastRenderedGreetingIds.has(data.turn_id)) return;
+  lastRenderedGreetingIds.add(data.turn_id);
+
+  sentinelGuardAlerting = true;
+  updateGuardUi(sentinelGuardConfig);
+
+  const scrollBox = document.getElementById('chat-scroll');
+  if (scrollBox) {
+    const aRow = document.createElement('div');
+    aRow.className = 'chat-row assistant guard-alert-row';
+    let imgHtml = '';
+    if (data.image_data_uri) {
+      imgHtml = `
+        <div class="guard-snapshot-wrap">
+          <img src="${data.image_data_uri}" class="guard-intruder-img" alt="陌生人抓拍" />
+        </div>
+      `;
+    }
+    let audioHtml = '';
+    if (data.wav_b64) {
+      audioHtml = `
+        <div class="audio-player-wrap" style="margin-top:8px;">
+          <audio controls preload="none" src="data:audio/wav;base64,${data.wav_b64}" style="height:32px;width:100%;max-width:280px;"></audio>
+        </div>
+      `;
+    }
+    aRow.innerHTML = `
+      <div class="chat-bubble">
+        <div class="guard-alert-header">
+          <span class="guard-alert-title">${data.alert_title || '警惕模式 · 陌生人闯入警报'}</span>
+          <span class="guard-alert-time">${data.time_str || ''}</span>
+        </div>
+        <div class="guard-alert-body">
+          ${imgHtml}
+          <div class="guard-alert-info">
+            <div class="guard-alert-desc">${data.alert_text || '检测到陌生人员靠近监视区域'}</div>
+            <div class="guard-speech-text">“${data.assistant_text}”</div>
+            <div class="guard-speech-meta">持续语音警报 ${data.alert_count || 3} 次 · 间隔 ${data.alert_duration_s || 5}s</div>
+            ${audioHtml}
+          </div>
+        </div>
+      </div>
+    `;
+    scrollBox.appendChild(aRow);
+    scrollBox.scrollTop = scrollBox.scrollHeight;
+  }
+
+  // 伙伴切换与受惊警惕动作
+  const idx = PET_ID_TO_INDEX[data.pet_id] !== undefined ? PET_ID_TO_INDEX[data.pet_id] : activePetIndex;
+  if (idx !== activePetIndex) switchPet(idx);
+  if (pets[activePetIndex]) {
+    pets[activePetIndex].expression = 'surprised';
+    pets[activePetIndex].state = 'speaking';
+    setTimeout(() => {
+      if (pets[activePetIndex]) pets[activePetIndex].state = 'running';
+    }, 6000);
+  }
+
+  // 警报持续一定周期后恢复常态
+  const totalAlertSec = (data.alert_count || 3) * ((data.alert_duration_s || 5) + 3);
+  setTimeout(() => {
+    sentinelGuardAlerting = false;
+    updateGuardUi(sentinelGuardConfig);
+  }, totalAlertSec * 1000);
+}
+
+function updateSentinelCooldownDisplay() {
+  const cooldownTag = document.getElementById('sentinel-cooldown-tag');
+  if (!cooldownTag) return;
+  if (!sentinelCameraEnabled) {
+    cooldownTag.style.display = 'none';
+    return;
+  }
+  if (!sentinelCooldownEnabled) {
+    cooldownTag.style.display = 'block';
+    cooldownTag.style.background = 'rgba(100, 116, 139, 0.25)';
+    cooldownTag.style.borderColor = 'rgba(148, 163, 184, 0.4)';
+    cooldownTag.style.color = '#94a3b8';
+    cooldownTag.textContent = '静音守望';
+    return;
+  }
+  cooldownTag.style.background = 'rgba(15, 23, 42, 0.75)';
+  cooldownTag.style.borderColor = 'rgba(0, 240, 255, 0.35)';
+  cooldownTag.style.color = '#38bdf8';
+  if (sentinelCooldownRemaining > 0) {
+    cooldownTag.style.display = 'block';
+    const m = Math.floor(sentinelCooldownRemaining / 60);
+    const s = sentinelCooldownRemaining % 60;
+    const timeText = m > 0 ? `${m}分${s < 10 ? '0' : ''}${s}秒` : `${s}s`;
+    cooldownTag.textContent = `冷却 ${timeText}`;
+  } else {
+    cooldownTag.style.display = 'none';
+  }
+}
+
+// 本地每 1000ms（整整 1 秒）平滑精准递减倒计时
+setInterval(() => {
+  if (sentinelCooldownEnabled && sentinelCooldownRemaining > 0) {
+    sentinelCooldownRemaining--;
+    updateSentinelCooldownDisplay();
+  }
+}, 1000);
+
+function handleSentinelGreetingEvent(data) {
+  if (!data || !data.turn_id) return;
+  if (lastRenderedGreetingIds.has(data.turn_id)) return;
+  lastRenderedGreetingIds.add(data.turn_id);
+
+  const scrollBox = document.getElementById('chat-scroll');
+  if (!scrollBox) return;
+
+  // 1. 用户感知气泡
+  const uRow = document.createElement('div');
+  uRow.className = 'chat-row user';
+  uRow.innerHTML = `
+    <div class="chat-bubble">
+      <div class="mobile-sender-badge" style="color:var(--cyan)">● 实时视线哨兵守望感应</div>
+      <div style="margin-top:3px;">镜头前捕捉到【${data.label || '主人'}】现身（置信度 ${data.score || '0.85'}）</div>
+    </div>
+  `;
+  scrollBox.appendChild(uRow);
+
+  // 2. 伙伴主动迎候问候气泡
+  const aRow = document.createElement('div');
+  aRow.className = 'chat-row assistant';
+  let audioHtml = '';
+  if (data.wav_b64) {
+    audioHtml = `
+      <div class="audio-player-wrap" style="margin-top:8px;">
+        <audio controls preload="none" src="data:audio/wav;base64,${data.wav_b64}" style="height:32px;width:100%;max-width:260px;"></audio>
+      </div>
+    `;
+  }
+  aRow.innerHTML = `
+    <div class="chat-bubble">
+      <div class="mobile-sender-badge" style="color:var(--cyan)">● ${data.pet_name || '棉棉'} · 主动迎候问候</div>
+      <div class="reply-text" style="margin-top:4px;">${data.assistant_text}</div>
+      ${audioHtml}
+    </div>
+  `;
+  scrollBox.appendChild(aRow);
+  scrollBox.scrollTop = scrollBox.scrollHeight;
+
+  // 3. 伴侣切换与开启动画
+  const idx = PET_ID_TO_INDEX[data.pet_id] !== undefined ? PET_ID_TO_INDEX[data.pet_id] : activePetIndex;
+  if (idx !== activePetIndex) {
+    switchPet(idx);
+  }
+  if (pets[activePetIndex]) {
+    pets[activePetIndex].expression = 'happy';
+    pets[activePetIndex].state = 'speaking';
+    setTimeout(() => {
+      if (pets[activePetIndex]) pets[activePetIndex].state = 'running';
+    }, 4000);
+  }
+
+  // 4. 更新哨兵卡片上的小标签与冷却倒计时
+  const badge = document.getElementById('sentinel-chip-badge');
+  if (badge) {
+    badge.textContent = `已主动问候: ${data.label}`;
+  }
+  if (sentinelCooldownEnabled) {
+    sentinelCooldownRemaining = 60;
+  } else {
+    sentinelCooldownRemaining = 0;
+  }
+  updateSentinelCooldownDisplay();
+}
+
+async function toggleCameraSwitch() {
+  const pill = document.getElementById('sw-sentinel-camera');
+  const targetState = pill ? !pill.classList.contains('on') : null;
+  try {
+    const res = await fetch('/api/face/sentinel/toggle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(targetState !== null ? { enabled: targetState } : {})
+    });
+    const d = await res.json();
+    updateSentinelCameraUi(d.enabled);
+  } catch (e) {
+    console.warn('Toggle camera error:', e);
+  }
+}
+
+async function toggleCooldownSwitch() {
+  const pill = document.getElementById('sw-sentinel-cooldown');
+  const targetState = pill ? !pill.classList.contains('on') : null;
+  try {
+    const res = await fetch('/api/face/sentinel/greeting_toggle', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(targetState !== null ? { enabled: targetState } : {})
+    });
+    const d = await res.json();
+    updateSentinelCooldownUi(d.greeting_enabled !== undefined ? d.greeting_enabled : d.cooldown_enabled);
+  } catch (e) {
+    console.warn('Toggle greeting error:', e);
+  }
+}
+
+function toggleSentinel() {
+  toggleCameraSwitch();
+}
+
+function updateSentinelCameraUi(enabled) {
+  sentinelCameraEnabled = !!enabled;
+  const pill = document.getElementById('sw-sentinel-camera');
+  const dot = document.getElementById('sentinel-dot');
+  const feed = document.getElementById('sentinel-live-feed');
+  const badge = document.getElementById('sentinel-chip-badge');
+
+  if (pill) {
+    pill.classList.toggle('on', sentinelCameraEnabled);
+  }
+  if (sentinelCameraEnabled) {
+    if (dot) { dot.classList.add('pulse'); dot.classList.remove('paused'); }
+    if (badge) { badge.textContent = '正在守望中...'; }
+    if (feed) { feed.src = '/api/face/video_feed?t=' + Date.now(); }
+  } else {
+    if (dot) { dot.classList.remove('pulse'); dot.classList.add('paused'); }
+    if (badge) { badge.textContent = '摄像头已关闭'; }
+    if (feed) { feed.src = '/api/face/video_feed?t=' + Date.now(); }
+  }
+  updateSentinelCooldownDisplay();
+}
+
+function updateSentinelCooldownUi(cooldownEnabled) {
+  sentinelCooldownEnabled = !!cooldownEnabled;
+  const pill = document.getElementById('sw-sentinel-cooldown');
+  if (pill) {
+    pill.classList.toggle('on', sentinelCooldownEnabled);
+  }
+  if (!sentinelCooldownEnabled) {
+    sentinelCooldownRemaining = 0;
+  }
+  updateSentinelCooldownDisplay();
+}
+
+function updateSentinelUiState(enabled) {
+  updateSentinelCameraUi(enabled);
+}
+
+async function pollSentinelStatus() {
+  try {
+    const res = await fetch('/api/face/sentinel/status');
+    const d = await res.json();
+    if (!d) return;
+
+    if (d.enabled !== undefined && d.enabled !== sentinelCameraEnabled) {
+      updateSentinelCameraUi(d.enabled);
+    }
+    if (d.greeting_enabled !== undefined && d.greeting_enabled !== sentinelCooldownEnabled) {
+      updateSentinelCooldownUi(d.greeting_enabled);
+    } else if (d.cooldown_enabled !== undefined && d.cooldown_enabled !== sentinelCooldownEnabled) {
+      updateSentinelCooldownUi(d.cooldown_enabled);
+    }
+
+    if (d.guard_enabled !== undefined) {
+      updateGuardUi({
+        enabled: d.guard_enabled,
+        start_time: d.guard_start_time || sentinelGuardConfig.start_time,
+        end_time: d.guard_end_time || sentinelGuardConfig.end_time,
+        alert_count: d.guard_alert_count || sentinelGuardConfig.alert_count,
+        alert_duration_s: d.guard_alert_duration_s || sentinelGuardConfig.alert_duration_s,
+        is_in_guard_period: d.is_in_guard_period,
+      });
+    }
+
+    const badge = document.getElementById('sentinel-chip-badge');
+    if (d.enabled) {
+      if (d.locked_target) {
+        if (badge) badge.textContent = `${d.locked_target.label} · 置信度 ${d.locked_target.confidence}`;
+      } else {
+        if (badge) badge.textContent = '正在守望中...';
+      }
+
+      if (sentinelCooldownEnabled && typeof d.master_cooldown_remaining_s === 'number') {
+        const serverRem = Math.round(d.master_cooldown_remaining_s);
+        // 若本地与服务端误差超过 2 秒，以服务端校准，其余时间本地 1 秒 1 秒平滑递减
+        if (Math.abs(sentinelCooldownRemaining - serverRem) > 2 || serverRem === 0) {
+          sentinelCooldownRemaining = serverRem;
+        }
+        updateSentinelCooldownDisplay();
+      }
+    } else {
+      if (badge) badge.textContent = '摄像头已关闭';
+    }
+  } catch (e) {}
+}
+
+async function loadRecentGreetings() {
+  try {
+    const res = await fetch('/api/face/sentinel/greetings');
+    const d = await res.json();
+    if (d && d.greetings && Array.isArray(d.greetings)) {
+      d.greetings.forEach(g => {
+        if (g && g.turn_id && !lastRenderedGreetingIds.has(g.turn_id)) {
+          // 仅恢复最近 5 分钟内的问候
+          if (Date.now() / 1000 - (g.timestamp || 0) < 300) {
+            if (g.type === 'sentinel_guard_alert') {
+              handleGuardAlertEvent(g);
+            } else {
+              handleSentinelGreetingEvent(g);
+            }
+          }
+        }
+      });
+    }
+  } catch (e) {}
+}
+
+// 电脑硬件实时时钟驱动
+function updateLiveClock() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = String(now.getMonth() + 1).padStart(2, '0');
+  const d = String(now.getDate()).padStart(2, '0');
+  const hh = String(now.getHours()).padStart(2, '0');
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  const ss = String(now.getSeconds()).padStart(2, '0');
+  const wds = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+  const wd = wds[now.getDay()];
+
+  const elDate = document.getElementById('sys-clock-date');
+  const elWeek = document.getElementById('sys-clock-week');
+  const elTime = document.getElementById('sys-clock-time');
+  if (elDate) elDate.textContent = `${y}-${m}-${d}`;
+  if (elWeek) elWeek.textContent = wd;
+  if (elTime) elTime.textContent = `${hh}:${mm}:${ss}`;
+  const elPanelDigit = document.getElementById('panel-clock-digit');
+  if (elPanelDigit) elPanelDigit.textContent = `${hh}:${mm}:${ss}`;
+}
+
 document.getElementById('user-input').addEventListener('keydown', (e) => {
   if (e.key === 'Enter') submitMessage();
 });
 loadMemories();
 loadLlmConfig();
 loadVoiceprintStatus();
+loadFaceVault();
+loadGuardConfig();
+loadAlarmsList();
 connectPcMobileSync();
+pollSentinelStatus();
+loadRecentGreetings();
+setInterval(pollSentinelStatus, 2500);
+updateLiveClock();
+setInterval(updateLiveClock, 1000);
 </script>
 </body>
 </html>

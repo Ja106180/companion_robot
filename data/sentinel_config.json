@@ -1,0 +1,7 @@
+{
+  "guard_enabled": false,
+  "start_time": "10:00",
+  "end_time": "20:00",
+  "alert_count": 3,
+  "alert_duration_s": 5
+}

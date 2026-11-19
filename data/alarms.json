@@ -1,0 +1,52 @@
+[
+  {
+    "id": "morning_alarm_default",
+    "time": "06:00",
+    "label": "早晨起床唤醒与晨报",
+    "type": "morning",
+    "enabled": true,
+    "content": "早起喝一杯温开水润喉，整理今日重要日程，出门前检查手机、工卡和钥匙。",
+    "repeat": "daily",
+    "last_triggered_date": ""
+  },
+  {
+    "id": "sample_memo_alarm",
+    "time": "14:30",
+    "label": "下午重要项目会议备忘",
+    "type": "memo",
+    "enabled": true,
+    "content": "下午与核心团队讨论智能灵宠项目阶段性进展，重点分享人脸视觉哨兵与晨报闹钟的落地效果，提前备好演示环境。",
+    "repeat": "daily",
+    "last_triggered_date": ""
+  },
+  {
+    "id": "alarm_1794817509573",
+    "time": "07:30",
+    "label": "晨跑与早间英语精听",
+    "type": "morning",
+    "enabled": true,
+    "content": "出门跑步前做5分钟动态拉伸，带上骨传导耳机和运动水壶，听完BBC晨间头条新闻",
+    "repeat": "daily",
+    "last_triggered_date": ""
+  },
+  {
+    "id": "alarm_1794819567097",
+    "time": "06:00",
+    "label": "早晨起床唤醒与晨报",
+    "type": "morning",
+    "enabled": true,
+    "content": "",
+    "repeat": "once",
+    "last_triggered_date": ""
+  },
+  {
+    "id": "alarm_1794819604066",
+    "time": "17:01",
+    "label": "重要日程知识库备忘",
+    "type": "memo",
+    "enabled": false,
+    "content": "提醒我休息一下",
+    "repeat": "once",
+    "last_triggered_date": "2026-11-16"
+  }
+]

@@ -582,16 +582,19 @@ class CompanionWebAgent:
                 res["category"] = "news"
                 return res
 
-        # 3. 检测显式【上网搜索 / 实时查询】意图
-        if re.search(r"(?:上网|联网|搜索|搜一下|查一下|帮我查|去网上看看|最新汇率|今日金价|今天几号|今天星期几|今年是哪年)", text):
-            if re.search(r"(?:今天几号|今天星期几|现在几点|今天是什么日子|今年是哪年)", text) and not re.search(r"(?:搜索|查一下|上网)", text):
-                now_str = get_chinese_now_str()
-                return {
-                    "success": True,
-                    "category": "time",
-                    "chip_title": f"全息时钟已同步 · {now_str}",
-                    "context_text": f"当前准确的北京时间是：{now_str}。",
-                }
+        # 3. 检测实时【电脑硬件时钟 / 日期时间】询问意图（零延迟秒级感知）
+        if re.search(r"(?:现在几点|几点了|几点啦|当前时间|报个时|现在是什么时间|今天几号|今天星期几|今天周几|今年是哪年|今年几几年|日期是什么|今天是哪一天|现在时间)", text):
+            now_str = get_chinese_now_str()
+            now_sec = datetime.now().strftime("%H:%M:%S")
+            return {
+                "success": True,
+                "category": "time",
+                "chip_title": f"电脑硬件时钟 · {now_sec}",
+                "context_text": f"当前电脑本地真实硬件时间是：{now_str}（秒级：{now_sec}）。",
+            }
+
+        # 4. 检测显式【上网搜索 / 实时查询】意图
+        if re.search(r"(?:上网|联网|搜索|搜一下|查一下|帮我查|去网上看看|最新汇率|今日金价)", text):
             clean_q = re.sub(r"^(?:请|帮我|去|上网|联网|网上|搜索|搜一下|查一下|查询|看看)+", "", text).strip() or text
             logger.info(f"[WebAgent] Detected explicit web search intent: {clean_q}")
             res = self.fetch_web_search(clean_q, limit=4)

@@ -246,6 +246,133 @@
     color: var(--text-main);
     border-bottom-left-radius: 4px;
   }
+  .m-guard-banner {
+    position: fixed;
+    top: 10px;
+    left: 12px;
+    right: 12px;
+    background: linear-gradient(135deg, rgba(220, 38, 38, 0.96), rgba(185, 28, 28, 0.96));
+    border: 1px solid #ef4444;
+    border-radius: 12px;
+    padding: 10px 14px;
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.5);
+    z-index: 9999;
+    display: none;
+    animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .m-guard-banner.show {
+    display: block;
+  }
+  .m-guard-banner-inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .m-guard-alert-bubble {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.16) 0%, rgba(16, 26, 46, 0.95) 100%) !important;
+    border: 1px solid rgba(239, 68, 68, 0.6) !important;
+    box-shadow: 0 0 16px rgba(239, 68, 68, 0.25);
+  }
+  .m-alarm-ringing-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(10, 15, 29, 0.92);
+    backdrop-filter: blur(16px);
+    z-index: 99999;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 20px;
+  }
+  .m-alarm-ringing-overlay.show {
+    display: flex;
+    animation: fadeIn 0.25s ease-out;
+  }
+  .m-alarm-ringing-card {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.98));
+    border: 1.5px solid rgba(245, 158, 11, 0.7);
+    border-radius: 18px;
+    padding: 24px 20px;
+    width: 100%;
+    max-width: 360px;
+    text-align: center;
+    box-shadow: 0 0 35px rgba(245, 158, 11, 0.4);
+  }
+  .m-alarm-bell {
+    font-size: 46px;
+    display: inline-block;
+    animation: bellRingingSwing 0.65s infinite alternate cubic-bezier(0.36, 0.07, 0.19, 0.97);
+    margin-bottom: 8px;
+  }
+  .m-alarm-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fbbf24;
+    margin-bottom: 4px;
+  }
+  .m-alarm-label {
+    font-size: 14px;
+    color: #e2e8f0;
+    margin-bottom: 12px;
+  }
+  .m-alarm-memo {
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px dashed rgba(245, 158, 11, 0.35);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 11.5px;
+    color: #fde68a;
+    line-height: 1.4;
+    text-align: left;
+    margin-bottom: 14px;
+    max-height: 80px;
+    overflow-y: auto;
+  }
+  .m-alarm-timer-box {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-bottom: 16px;
+  }
+  .m-alarm-countdown {
+    font-family: monospace;
+    font-size: 30px;
+    font-weight: 700;
+    color: #38bdf8;
+    letter-spacing: 2px;
+  }
+  .m-alarm-hint {
+    font-size: 10.5px;
+    color: #94a3b8;
+    margin-top: 2px;
+  }
+  .m-btn-stop-alarm {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 20px;
+    font-size: 14.5px;
+    font-weight: 700;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.5);
+  }
+  .m-briefing-bubble {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(16, 26, 46, 0.96) 100%) !important;
+    border: 1px solid rgba(245, 158, 11, 0.5) !important;
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.18);
+  }
+  @keyframes bellRingingSwing {
+    0% { transform: rotate(-22deg) scale(1.08); }
+    100% { transform: rotate(22deg) scale(1.08); }
+  }
+  @keyframes slideDown {
+    from { transform: translateY(-40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
   .m-chip {
     display: inline-flex;
     align-items: center;
@@ -278,11 +405,77 @@
     border: 1px solid rgba(0, 240, 255, 0.3);
     background: rgba(5, 10, 20, 0.85);
   }
+  .m-vision-img-wrap {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
   .m-vision-card img {
     display: block;
     width: 100%;
     max-height: 220px;
     object-fit: cover;
+  }
+  .m-face-badge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 10px;
+    font-weight: 500;
+    background: rgba(5, 12, 24, 0.85);
+    backdrop-filter: blur(6px);
+    border: 1px solid rgba(0, 240, 255, 0.45);
+    color: #00f0ff;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    pointer-events: none;
+    z-index: 4;
+  }
+  .m-face-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #00f0ff;
+    box-shadow: 0 0 5px #00f0ff;
+  }
+  .m-face-reticle {
+    position: absolute;
+    box-sizing: border-box;
+    border: 1.5px solid rgba(0, 240, 255, 0.85);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.35), inset 0 0 6px rgba(0, 240, 255, 0.2);
+    pointer-events: none;
+    z-index: 3;
+    transition: all 0.25s ease;
+  }
+  .m-face-hud {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    right: 6px;
+    display: flex;
+    gap: 5px;
+    z-index: 5;
+    overflow-x: auto;
+  }
+  .m-hud-pill {
+    background: rgba(8, 16, 30, 0.88);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    border-radius: 10px;
+    padding: 2px 8px;
+    font-size: 10px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .m-hud-pill.active {
+    border-color: #00f0ff;
+    color: #00f0ff;
+    background: rgba(0, 240, 255, 0.2);
+    box-shadow: 0 0 6px rgba(0, 240, 255, 0.3);
   }
   .m-vision-bar {
     display: flex;
@@ -523,9 +716,28 @@
     </button>
     <input type="file" id="m-audio-capture" accept="audio/*" capture style="display:none" onchange="onNativeAudioCaptured(event)">
     <input type="text" id="m-input" class="m-input" placeholder="输入文字或点左侧「语音」直接说话..." autocomplete="off">
-    <button class="m-send-btn" id="m-send-btn" onclick="sendFromMobile()">发送</button>
   </div>
 </footer>
+
+<!-- 移动端全屏闹钟响铃视窗 -->
+<div class="m-alarm-ringing-overlay" id="m-alarm-overlay">
+  <div class="m-alarm-ringing-card">
+    <div class="m-alarm-title" id="m-ring-title">早晨唤醒闹钟正在响铃</div>
+    <div class="m-alarm-label" id="m-ring-label">早晨起床唤醒与晨报</div>
+    <div class="m-alarm-memo" id="m-ring-memo" style="display:none;"></div>
+    
+    <div class="m-alarm-timer-box">
+      <div class="m-alarm-countdown" id="m-ring-countdown">05:00</div>
+      <div class="m-alarm-hint">晶莹叮叮叮敲钟铃声响铃中 · 满 5 分钟将自动停止并开启播报</div>
+    </div>
+
+    <button type="button" class="m-btn-stop-alarm" onclick="stopMobileAlarm()">
+      停止闹钟并听取播报
+    </button>
+  </div>
+</div>
+
+<audio id="m-alarm-audio" loop preload="auto" style="display:none;"></audio>
 
 <script>
 let selectedPet = 'luma';
@@ -682,8 +894,35 @@ function connectMobileSync() {
             const card = document.createElement('div');
             card.className = 'm-vision-card';
             const modeLabel = data.mode === 'camera' ? '电脑摄像头实景抓拍' : '当前电脑页面实时截图';
+
+            let faceOverlayHtml = '';
+            const fa = data.face_analysis;
+            if (data.mode === 'camera' && fa && fa.faces_count > 0 && fa.locked_target) {
+              const lt = fa.locked_target;
+              const bp = lt.bbox_pct;
+              const edgeBadgeHtml = `
+                <div class="m-face-badge">
+                  <span class="m-face-dot"></span>
+                  <span class="m-face-text">${lt.display_badge}</span>
+                </div>
+              `;
+              const reticleHtml = `
+                <div class="m-face-reticle" style="left:${bp.left}%;top:${bp.top}%;width:${bp.width}%;height:${bp.height}%;"></div>
+              `;
+              let hudHtml = '';
+              if (fa.faces_count > 1 && fa.targets) {
+                hudHtml = `<div class="m-face-hud">` + fa.targets.map(t => `
+                  <button type="button" class="m-hud-pill ${t.is_locked ? 'active' : ''}" onclick="switchFaceTargetMobile(this, ${t.target_index})">${t.target_title}${t.is_locked ? ' (锁定)' : ''}</button>
+                `).join('') + `</div>`;
+              }
+              faceOverlayHtml = edgeBadgeHtml + reticleHtml + hudHtml;
+            }
+
             card.innerHTML = `
-              <img src="${data.image_data_uri}" alt="${modeLabel}" onclick="window.open(this.src, '_blank')">
+              <div class="m-vision-img-wrap">
+                <img src="${data.image_data_uri}" alt="${modeLabel}" onclick="window.open(this.src, '_blank')">
+                ${faceOverlayHtml}
+              </div>
               <div class="m-vision-bar">
                 <span>${modeLabel}</span>
                 <a href="${data.image_data_uri}" download="伴生舱视觉_${Date.now()}.jpg">保存图片</a>
@@ -735,6 +974,73 @@ function connectMobileSync() {
         mobileMuteUntilTs = performance.now() + remMs;
         lastMobileSpeakTs = performance.now();
         setTimeout(() => { isPetSpeakingNow = false; }, remMs);
+      } else if (data.type === 'chat_sentinel_greeting') {
+        highlightPetBtn(data.pet_id);
+        appendUserBubble(`【实时视线哨兵】镜头前捕捉到【${data.label || '主人'}】现身`, '哨兵主动感知');
+        const asstBubble = document.createElement('div');
+        asstBubble.className = 'm-bubble asst';
+        let audioHtml = '';
+        if (data.wav_b64) {
+          audioHtml = `<div class="m-bubble-audio"><audio controls src="data:audio/wav;base64,${data.wav_b64}" style="height:28px;width:100%;margin-top:6px;"></audio></div>`;
+        }
+        asstBubble.innerHTML = `
+          <div class="m-bubble-pet-tag" style="color:var(--cyan);font-size:10px;margin-bottom:4px;">● ${data.pet_name || '棉棉'} · 主动迎候问候</div>
+          <div class="m-bubble-text">${data.assistant_text}</div>
+          ${audioHtml}
+        `;
+        const aRow = document.createElement('div');
+        aRow.className = 'm-row assistant';
+        aRow.appendChild(asstBubble);
+        const box = document.getElementById('m-chat-box');
+        if (box) {
+          box.appendChild(aRow);
+          box.scrollTop = box.scrollHeight;
+        }
+      } else if (data.type === 'sentinel_guard_alert') {
+        highlightPetBtn(data.pet_id);
+        if (navigator.vibrate) {
+          try { navigator.vibrate([300, 150, 300, 150, 500]); } catch (e) {}
+        }
+        showMobileGuardBanner(data);
+        const alertBubble = document.createElement('div');
+        alertBubble.className = 'm-bubble asst m-guard-alert-bubble';
+        let imgHtml = '';
+        if (data.image_data_uri) {
+          imgHtml = `
+            <div style="margin-top:6px;border-radius:6px;overflow:hidden;border:1px solid rgba(239,68,68,0.5);">
+              <img src="${data.image_data_uri}" style="width:100%;max-height:180px;object-fit:cover;display:block;" alt="陌生人抓拍" />
+            </div>
+          `;
+        }
+        let audioHtml = '';
+        if (data.wav_b64) {
+          audioHtml = `<div class="m-bubble-audio"><audio controls preload="none" src="data:audio/wav;base64,${data.wav_b64}" style="height:28px;width:100%;margin-top:6px;"></audio></div>`;
+        }
+        alertBubble.innerHTML = `
+          <div style="display:flex;align-items:center;gap:4px;color:#f87171;font-size:11px;font-weight:600;margin-bottom:4px;">
+            <span>${data.alert_title || '警惕模式 · 陌生人闯入警报'}</span>
+            <span style="margin-left:auto;font-size:9.5px;color:#94a3b8;">${data.time_str || ''}</span>
+          </div>
+          <div style="font-size:11px;color:#cbd5e1;margin-bottom:3px;">${data.alert_text || ''}</div>
+          ${imgHtml}
+          <div style="margin-top:6px;font-size:12px;color:#fca5a5;font-weight:500;">“${data.assistant_text}”</div>
+          <div style="font-size:9.5px;color:#94a3b8;margin-top:3px;">持续语音警报 ${data.alert_count || 3} 次 · 间隔 ${data.alert_duration_s || 5}s</div>
+          ${audioHtml}
+        `;
+        const aRow = document.createElement('div');
+        aRow.className = 'm-row assistant';
+        aRow.appendChild(alertBubble);
+        const box = document.getElementById('m-chat-box');
+        if (box) {
+          box.appendChild(aRow);
+          box.scrollTop = box.scrollHeight;
+        }
+      } else if (data.type === 'alarm_ringing_started') {
+        showMobileAlarmRinging(data);
+      } else if (data.type === 'alarm_ringing_stopped') {
+        hideMobileAlarmRinging();
+      } else if (data.type === 'chat_alarm_briefing') {
+        handleMobileAlarmBriefing(data);
       }
     } catch (e) {}
   };
@@ -743,6 +1049,182 @@ function connectMobileSync() {
     es.close();
     setTimeout(connectMobileSync, 2500);
   };
+}
+
+let mRingingTimer = null;
+
+function showMobileAlarmRinging(data) {
+  if (!data || !data.alarm) return;
+  highlightPetBtn(data.alarm.pet_id || 'luma');
+  if (navigator.vibrate) {
+    try { navigator.vibrate([250, 100, 250, 100, 400]); } catch (e) {}
+  }
+
+  const overlay = document.getElementById('m-alarm-overlay');
+  if (overlay) {
+    overlay.classList.add('show');
+    const tEl = document.getElementById('m-ring-title');
+    const lEl = document.getElementById('m-ring-label');
+    const mEl = document.getElementById('m-ring-memo');
+
+    if (tEl) tEl.textContent = data.alarm.type === 'morning' ? '早晨唤醒闹钟正在响铃' : '知识库日程备忘正在响铃';
+    if (lEl) lEl.textContent = data.alarm.label || '闹钟提醒';
+    if (mEl) {
+      if (data.alarm.content && data.alarm.content.trim()) {
+        mEl.style.display = 'block';
+        mEl.textContent = '提醒备忘：' + data.alarm.content;
+      } else {
+        mEl.style.display = 'none';
+      }
+    }
+  }
+
+  // 播放铃声
+  if (data.chime_wav_b64) {
+    const audio = document.getElementById('m-alarm-audio');
+    if (audio) {
+      audio.src = 'data:audio/wav;base64,' + data.chime_wav_b64;
+      audio.play().catch(e => console.log('Mobile audio error:', e));
+    }
+  }
+
+  // 5分钟倒计时
+  if (mRingingTimer) clearInterval(mRingingTimer);
+  let rem = Math.max(1, Math.round(data.max_duration_s || 300));
+  const cdEl = document.getElementById('m-ring-countdown');
+  const updateCd = () => {
+    const m = Math.floor(rem / 60);
+    const s = rem % 60;
+    if (cdEl) cdEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  };
+  updateCd();
+  mRingingTimer = setInterval(() => {
+    rem--;
+    if (rem <= 0) {
+      clearInterval(mRingingTimer);
+      mRingingTimer = null;
+      stopMobileAlarm('timeout');
+    } else {
+      updateCd();
+    }
+  }, 1000);
+}
+
+function hideMobileAlarmRinging() {
+  const overlay = document.getElementById('m-alarm-overlay');
+  if (overlay) overlay.classList.remove('show');
+  const audio = document.getElementById('m-alarm-audio');
+  if (audio) {
+    audio.pause();
+    audio.currentTime = 0;
+  }
+  if (mRingingTimer) {
+    clearInterval(mRingingTimer);
+    mRingingTimer = null;
+  }
+}
+
+async function stopMobileAlarm(reason = 'manual') {
+  hideMobileAlarmRinging();
+  try {
+    await fetch('/api/alarms/stop', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason })
+    });
+  } catch (e) {}
+}
+
+function handleMobileAlarmBriefing(data) {
+  hideMobileAlarmRinging();
+  if (!data || !data.turn_id) return;
+  highlightPetBtn(data.pet_id);
+
+  const bubble = document.createElement('div');
+  bubble.className = 'm-bubble asst m-briefing-bubble';
+
+  let weatherHtml = '';
+  if (data.weather && data.weather.success) {
+    const w = data.weather;
+    weatherHtml = `
+      <div style="background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.3);border-radius:6px;padding:6px 8px;margin-bottom:6px;font-size:11px;color:#e2e8f0;">
+        <div style="color:#38bdf8;font-weight:600;margin-bottom:2px;">${w.city || '福州'} 气象 · ${w.weather || ''} ${w.temp_now}°C</div>
+        <div>${w.context_text || ''}</div>
+      </div>
+    `;
+  }
+
+  let newsHtml = '';
+  if (data.news && Array.isArray(data.news) && data.news.length > 0) {
+    let items = '';
+    data.news.forEach((it, idx) => {
+      items += `<div style="margin-bottom:3px;padding-left:4px;border-left:2px solid #f59e0b;"><strong>${idx+1}. ${it.title}</strong></div>`;
+    });
+    newsHtml = `
+      <div style="background:rgba(0,0,0,0.3);border-radius:6px;padding:6px 8px;margin-bottom:6px;font-size:10.5px;color:#cbd5e1;">
+        <div style="font-weight:600;color:#fde68a;margin-bottom:3px;">今日实时要闻</div>
+        ${items}
+      </div>
+    `;
+  }
+
+  let memoHtml = '';
+  if (data.memo_content && data.memo_content.trim()) {
+    memoHtml = `
+      <div style="background:rgba(245,158,11,0.08);border:1px dashed rgba(245,158,11,0.35);border-radius:6px;padding:6px 8px;margin-bottom:6px;font-size:11px;color:#fef08a;">
+        <div style="font-weight:600;color:#fbbf24;margin-bottom:2px;">知识库内容备忘</div>
+        <div>${data.memo_content}</div>
+      </div>
+    `;
+  }
+
+  let audioHtml = '';
+  if (data.wav_b64) {
+    audioHtml = `<div class="m-bubble-audio"><audio controls preload="none" src="data:audio/wav;base64,${data.wav_b64}" style="height:28px;width:100%;margin-top:6px;"></audio></div>`;
+  }
+
+  bubble.innerHTML = `
+    <div style="display:flex;align-items:center;gap:4px;color:#fbbf24;font-size:11.5px;font-weight:600;margin-bottom:6px;">
+      <span>${data.card_title || '晨报日程'}</span>
+      <span style="margin-left:auto;font-size:9.5px;color:#94a3b8;">${data.time_str || ''}</span>
+    </div>
+    ${weatherHtml}
+    ${newsHtml}
+    ${memoHtml}
+    <div style="font-size:12px;color:#f8fafc;line-height:1.45;margin-top:4px;">“${data.assistant_text}”</div>
+    ${audioHtml}
+  `;
+
+  const aRow = document.createElement('div');
+  aRow.className = 'm-row assistant';
+  aRow.appendChild(bubble);
+  const box = document.getElementById('m-chat-box');
+  if (box) {
+    box.appendChild(aRow);
+    box.scrollTop = box.scrollHeight;
+  }
+}
+
+function showMobileGuardBanner(data) {
+  let banner = document.getElementById('m-guard-banner');
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'm-guard-banner';
+    banner.className = 'm-guard-banner';
+    document.body.appendChild(banner);
+  }
+  banner.innerHTML = `
+    <div class="m-guard-banner-inner">
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:12px;font-weight:600;color:#fff;">警惕警报：检测到陌生人闯入！</div>
+        <div style="font-size:10px;color:#fca5a5;text-overflow:ellipsis;overflow:hidden;white-space:nowrap;">时间：${data.time_str || ''} · 实时抓拍与持续警报已启动</div>
+      </div>
+    </div>
+  `;
+  banner.classList.add('show');
+  setTimeout(() => {
+    banner.classList.remove('show');
+  }, 6000);
 }
 
 // =========================================================================
@@ -1025,6 +1507,39 @@ async function toggleMobileAutoVad() {
   } catch (e) {
     setMobileAsrBar(true, '请点击左下角「语音」按钮进行说话');
     setTimeout(() => setMobileAsrBar(false, ''), 2500);
+  }
+}
+
+async function switchFaceTargetMobile(btn, targetIndex) {
+  try {
+    const card = btn.closest('.m-vision-card');
+    const res = await fetch('/api/face/switch_target', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ target_index: targetIndex })
+    });
+    const d = await res.json();
+    if (d && d.face_analysis && d.face_analysis.locked_target) {
+      const lt = d.face_analysis.locked_target;
+      const bp = lt.bbox_pct;
+      const reticle = card.querySelector('.m-face-reticle');
+      if (reticle) {
+        reticle.style.left = `${bp.left}%`;
+        reticle.style.top = `${bp.top}%`;
+        reticle.style.width = `${bp.width}%`;
+        reticle.style.height = `${bp.height}%`;
+      }
+      const badge = card.querySelector('.m-face-text');
+      if (badge) badge.textContent = lt.display_badge;
+
+      const pills = card.querySelectorAll('.m-hud-pill');
+      pills.forEach((p, idx) => {
+        p.classList.toggle('active', idx === lt.target_index);
+        p.textContent = idx === lt.target_index ? `目标 ${idx + 1} (锁定)` : `目标 ${idx + 1}`;
+      });
+    }
+  } catch (e) {
+    console.warn('Switch mobile face target error:', e);
   }
 }
 
